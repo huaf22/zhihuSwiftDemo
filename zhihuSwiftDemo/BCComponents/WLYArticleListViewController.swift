@@ -9,10 +9,10 @@
 import UIKit
 
 class WLYArticleListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    let PosterImageViewHeight: CGFloat = 100
+    let PosterImageViewHeight: CGFloat = 200
     
     var tableView: UITableView!
-    var navigationBar: WLYArticleNavigationBar?
+    var customBar: WLYArticleNavigationBar!
     var scrollImageView: WLYScrollImageView!
     
     var articles: Array<WLYArticle>? {
@@ -32,33 +32,39 @@ class WLYArticleListViewController: UIViewController, UITableViewDelegate, UITab
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationBar?.title = "知乎日报"
-        loadCustomNavigation()
         loadContentViews()
-        
         loadData()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
     }
     
     func loadData() {
         ArticleService.requestLatestArticles { (dailyArticle: WLYDailyArticle?, error: NSError?) in
-            if error != nil {
-               
+            if error == nil {
+                self.articles = dailyArticle?.articles
+                
+                var imageURLs =  Array<NSURL>()
+                for article in (dailyArticle?.articles)! {
+                    if let imageURL = article.imageURLs?[0] {
+                        imageURLs.append(imageURL)
+                    }
+                }
+                
+                self.scrollImageView.imageURLs = imageURLs
             } else {
-                 self.articles = dailyArticle?.articles
+                
             }
         }
-    }
-    
-    func loadCustomNavigation() {
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
-        
-        self.navigationBar = WLYArticleNavigationBar()
-       
-        self.view.addSubview(self.navigationBar!)
-        self.navigationBar?.snp_makeConstraints(closure: { (make) in
-            make.left.right.top.equalTo(self.view)
-            make.height.equalTo(44)
-        })
     }
     
     func loadContentViews() {
@@ -75,9 +81,18 @@ class WLYArticleListViewController: UIViewController, UITableViewDelegate, UITab
         self.scrollImageView = WLYScrollImageView()
         self.tableView.addSubview(self.scrollImageView)
         self.scrollImageView.snp_makeConstraints { (make) in
-            make.left.right.top.equalTo(self.tableView)
+            make.left.right.equalTo(self.tableView)
+            make.top.equalTo(self.tableView).offset(-PosterImageViewHeight)
             make.height.equalTo(PosterImageViewHeight)
+            make.width.equalTo(self.tableView)
         }
+        
+        self.customBar = WLYArticleNavigationBar()
+        self.view.addSubview(self.customBar)
+        self.customBar?.snp_makeConstraints(closure: { (make) in
+            make.left.right.top.equalTo(self.view)
+            make.height.equalTo(44)
+        })
     }
     
     

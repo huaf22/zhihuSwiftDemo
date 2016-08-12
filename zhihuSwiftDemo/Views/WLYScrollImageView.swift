@@ -10,23 +10,24 @@ import UIKit
 import Kingfisher
 
 class WLYScrollImageView: UIView, UIScrollViewDelegate {
-    let AnimationDuration : NSTimeInterval = 0.35
+    let AnimationDuration: NSTimeInterval = 1
+    let TimerDuration: NSTimeInterval = 3
+    let BaseTagIndex = 10000
     
-    var pageControl : UIPageControl!
-    var scrollView : UIScrollView!
-    var scrollTimer : NSTimer?
+    var pageControl: UIPageControl!
+    var scrollView: UIScrollView!
+    var scrollTimer: NSTimer?
     
-    var currentIndex : Int = 0 {
+    var currentIndex: Int = 0 {
         didSet {
             self.pageControl.currentPage = currentIndex
         }
     }
     
-    var imageViewArray : Array<UIView> = Array();
-    
     var imageURLs : Array<NSURL>? {
         didSet {
             self.initScrollViewContent()
+            self.startAutoScrollTimer()
         }
     }
     
@@ -34,6 +35,7 @@ class WLYScrollImageView: UIView, UIScrollViewDelegate {
         super.init(frame: frame);
         
         self.setupView()
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -72,14 +74,11 @@ class WLYScrollImageView: UIView, UIScrollViewDelegate {
             view.removeFromSuperview()
         }
         
-        self.imageViewArray.removeAll()
-        
-        for index in 0...count {
+        for index in 0..<count {
             let imageView : UIImageView = UIImageView()
             imageView.frame = CGRectMake(self.wly_width() * CGFloat(index), 0, self.wly_width(), self.wly_height())
-            imageView.tag = index
+            imageView.tag = BaseTagIndex + index
             
-            self.imageViewArray.append(imageView) //?
             self.scrollView.addSubview(imageView)
         }
         
@@ -100,11 +99,11 @@ class WLYScrollImageView: UIView, UIScrollViewDelegate {
         let leftImageIndex  = self.calculateLeftIndex()
         let rightImageIndex = self.calculateRightIndex()
         
-        (self.scrollView.viewWithTag(0) as! UIImageView).kf_setImageWithURL(self.imageURLs![leftImageIndex])
-        (self.scrollView.viewWithTag(1) as! UIImageView).kf_setImageWithURL(self.imageURLs![self.currentIndex])
-        (self.scrollView.viewWithTag(0) as! UIImageView).kf_setImageWithURL(self.imageURLs![rightImageIndex])
+        (self.scrollView.viewWithTag(BaseTagIndex + 0) as? UIImageView)!.kf_setImageWithURL(self.imageURLs![leftImageIndex])
+        (self.scrollView.viewWithTag(BaseTagIndex + 1) as? UIImageView)!.kf_setImageWithURL(self.imageURLs![self.currentIndex])
+        (self.scrollView.viewWithTag(BaseTagIndex + 2) as? UIImageView)!.kf_setImageWithURL(self.imageURLs![rightImageIndex])
         
-        self.scrollView.setContentOffset(CGPointMake((self.scrollView?.wly_width())!, 0), animated: false)
+        self.scrollView.setContentOffset(CGPointMake(self.scrollView.wly_width(), 0), animated: false)
     }
     
     func calcuateCurrentIndex() -> Int {
@@ -122,7 +121,7 @@ class WLYScrollImageView: UIView, UIScrollViewDelegate {
             index = 0
         }
         
-        NSLog("calcuateCurrentIndex--index: %ld", index)
+        print("calcuateCurrentIndex: \(index)")
         return index
     }
     
@@ -137,7 +136,7 @@ class WLYScrollImageView: UIView, UIScrollViewDelegate {
     }
     
     func scrollToNextPage() {
-        UIView.animateWithDuration(1000, animations: {
+        UIView.animateWithDuration(AnimationDuration, animations: {
             self.scrollView.setContentOffset(CGPointMake(self.scrollView.wly_width() * 2.0, 0), animated: false)
         }) { (finished) in
             self.updateScrollViewContent()
@@ -145,8 +144,10 @@ class WLYScrollImageView: UIView, UIScrollViewDelegate {
     }
     
     func startAutoScrollTimer() {
+        self.stopTimer()
+        
         if (self.imageURLs?.count)! > 1  {
-            self.scrollTimer = NSTimer.scheduledTimerWithTimeInterval(AnimationDuration,
+            self.scrollTimer = NSTimer.scheduledTimerWithTimeInterval(TimerDuration,
                                                                       target: self,
                                                                       selector: #selector(scrollToNextPage),
                                                                       userInfo: nil,
@@ -157,8 +158,15 @@ class WLYScrollImageView: UIView, UIScrollViewDelegate {
         }
     }
     
-    func scrollViewDidScroll(scrollView: UIScrollView) {
-        
+    func stopTimer() {
+        if self.scrollTimer != nil {
+            self.scrollTimer?.invalidate()
+            self.scrollTimer = nil
+        }
+    }
+    
+    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+        self.updateScrollViewContent()
     }
     
 }
