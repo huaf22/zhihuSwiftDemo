@@ -12,8 +12,10 @@ import UIKit
 class WLYSideMenuViewController: WLYViewController , UIScrollViewDelegate {
     var scrollView: UIScrollView!
     
-    var leftMenuView: UIView?
-    var mainViewController: UIViewController!
+    var leftMenuView: UIView!
+    var middleView: UIView!
+    
+    var currentChildVC: UIViewController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,11 +24,12 @@ class WLYSideMenuViewController: WLYViewController , UIScrollViewDelegate {
     }
     
     func loadContentViews() {
+        self.automaticallyAdjustsScrollViewInsets = false
+        
         self.scrollView = UIScrollView()
         self.scrollView.delegate = self
         self.scrollView.showsVerticalScrollIndicator = false
-        self.scrollView.showsVerticalScrollIndicator = false
-        self.scrollView.scrollsToTop = false
+        self.scrollView.showsHorizontalScrollIndicator = false
         self.scrollView.pagingEnabled = true
         self.scrollView.bounces = false
         self.view.addSubview(self.scrollView)
@@ -40,9 +43,8 @@ class WLYSideMenuViewController: WLYViewController , UIScrollViewDelegate {
         let contentView = UIView()
         contentView.backgroundColor = UIColor.blueColor()
         self.scrollView.addSubview(contentView)
-        
         contentView.snp_makeConstraints { (make) in
-            make.edges.equalTo(self.scrollView)
+            make.left.top.equalTo(self.scrollView)
             make.height.equalTo(self.scrollView)
             make.width.equalTo(self.scrollView).multipliedBy(1.5)
         }
@@ -53,12 +55,29 @@ class WLYSideMenuViewController: WLYViewController , UIScrollViewDelegate {
             make.width.equalTo(contentView).dividedBy(3)
         }
         
-        self.addChildViewController(self.mainViewController)
-        contentView.addSubview(self.mainViewController.view)
-        self.mainViewController.view.snp_makeConstraints { (make) in
-            make.left.equalTo((self.leftMenuView?.snp_right)!)
+        self.middleView = UIView()
+        contentView.addSubview(self.middleView)
+        self.middleView.snp_makeConstraints { (make) in
+            make.left.equalTo(self.leftMenuView.snp_right)
             make.top.bottom.right.equalTo(contentView)
         }
+    }
+    
+    func showViewController(vc: UIViewController) {
+        for viewController in self.childViewControllers {
+            viewController.removeFromParentViewController()
+        }
+        for view in self.middleView.subviews {
+            view.removeFromSuperview()
+        }
+        
+        self.addChildViewController(vc)
+        self.middleView.addSubview(vc.view)
+        vc.view.snp_makeConstraints { (make) in
+            make.edges.equalTo(self.middleView)
+        }
+        
+        self.currentChildVC = vc
     }
     
     func scrollViewDidScroll(scrollView: UIScrollView) {

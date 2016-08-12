@@ -10,29 +10,27 @@ import Foundation
 import UIKit
 
 class HomeSideMenuView: UIView, UITableViewDelegate, UITableViewDataSource {
-    let HeaderViewHeight: CGFloat = 50;
-    let FooterViewHeight: CGFloat = 50;
+    let HeaderViewHeight: CGFloat = 75
+    let FooterViewHeight: CGFloat = 75
     
     var headerView: UIView!
     var footerView: UIView!
     var tableView: UITableView!
     
-    var menuItems: Array<String>!
+    var menuItems: Array<String>! {
+        didSet {
+            self.tableView?.reloadData()
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        self.loadData()
+    
         self.setupView()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    func loadData() {
-        self.menuItems = ["首页", "用户推荐日报", "日常心理学", "电影日报", "不许无聊", "设计日报",
-                          "大公司日报", "财经日报", "互联网安全", "开始游戏", "音乐日报", "动漫日报", "体育日报"];
     }
     
     func setupView() {
@@ -54,8 +52,9 @@ class HomeSideMenuView: UIView, UITableViewDelegate, UITableViewDataSource {
         
         self.tableView = UITableView()
         self.addSubview(self.tableView)
-        self.tableView.delegate = self
         self.tableView.dataSource = self
+        self.tableView.showsHorizontalScrollIndicator = false
+        self.tableView.showsVerticalScrollIndicator = false
         self.tableView.registerClass(WLYTableViewCell.self, forCellReuseIdentifier:WLYTableViewCell.identifier)
         self.tableView.snp_makeConstraints { (make) in
             make.top.equalTo(self.headerView.snp_bottom)
@@ -73,4 +72,6 @@ class HomeSideMenuView: UIView, UITableViewDelegate, UITableViewDataSource {
         cell?.textLabel?.text = self.menuItems[indexPath.row]
         return cell!
     }
+    
+  
 }

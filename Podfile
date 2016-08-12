@@ -7,6 +7,8 @@ target 'zhihuSwiftDemo' do
 
 pod 'SnapKit', '~> 0.15.0'
 pod 'Kingfisher', '~> 2.4'
+pod 'Alamofire', '~> 3.4'
+pod 'AlamofireObjectMapper', '~> 3.0'
 
 end
 

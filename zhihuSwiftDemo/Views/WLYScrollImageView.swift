@@ -9,7 +9,7 @@
 import UIKit
 import Kingfisher
 
-class WLYScrollImageVIew: UIView, UIScrollViewDelegate {
+class WLYScrollImageView: UIView, UIScrollViewDelegate {
     let AnimationDuration : NSTimeInterval = 0.35
     
     var pageControl : UIPageControl!
