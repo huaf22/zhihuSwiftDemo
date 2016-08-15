@@ -19,10 +19,10 @@ class WLYArticleNavigationBar: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    var leftView : UIImageView?
-    var titleLabel : UILabel?
+    var leftView: UIImageView?
+    var titleLabel: UILabel?
     
-    var title : String? {
+    var title: String? {
         get {
             return self.titleLabel?.text
         }

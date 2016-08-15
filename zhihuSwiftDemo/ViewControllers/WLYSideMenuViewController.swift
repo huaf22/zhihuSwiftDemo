@@ -23,6 +23,11 @@ class WLYSideMenuViewController: WLYViewController , UIScrollViewDelegate {
         self.loadContentViews()
     }
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        self.scrollView.setContentOffset(CGPointMake(0.5 * self.scrollView.wly_width(), 0), animated: false)
+    }
+    
     func loadContentViews() {
         self.automaticallyAdjustsScrollViewInsets = false
         
@@ -38,7 +43,6 @@ class WLYSideMenuViewController: WLYViewController , UIScrollViewDelegate {
         }
         
         self.scrollView.contentSize = CGSizeMake(self.view.wly_width() * 1.5, self.view.wly_height())
-        self.scrollView.backgroundColor = UIColor.redColor()
         
         let contentView = UIView()
         contentView.backgroundColor = UIColor.blueColor()

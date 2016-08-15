@@ -116,6 +116,15 @@ class WLYArticleListViewController: UIViewController, UITableViewDelegate, UITab
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         NSLog("didSelectRowAtIndexPath: \(indexPath.row)")
+
+        if let article = self.articles?[indexPath.row] {
+            let articleDetailVC = WLYArticleDetailViewController()
+            articleDetailVC.articleID = article.id!
+            self.navigationController?.pushViewController(articleDetailVC, animated: true)
+        }
+        
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        
     }
 }
 

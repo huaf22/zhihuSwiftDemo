@@ -35,7 +35,6 @@ class WLYScrollImageView: UIView, UIScrollViewDelegate {
         super.init(frame: frame);
         
         self.setupView()
-        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -82,7 +81,7 @@ class WLYScrollImageView: UIView, UIScrollViewDelegate {
             self.scrollView.addSubview(imageView)
         }
         
-        self.pageControl.numberOfPages = (self.imageURLs?.count)!
+        self.pageControl.numberOfPages = self.imageURLs != nil ? (self.imageURLs?.count)! : 0
         self.updateScrollViewContent()
     }
     
@@ -145,8 +144,8 @@ class WLYScrollImageView: UIView, UIScrollViewDelegate {
     
     func startAutoScrollTimer() {
         self.stopTimer()
-        
-        if (self.imageURLs?.count)! > 1  {
+
+        if self.imageURLs != nil && (self.imageURLs?.count)! > 1  {
             self.scrollTimer = NSTimer.scheduledTimerWithTimeInterval(TimerDuration,
                                                                       target: self,
                                                                       selector: #selector(scrollToNextPage),
