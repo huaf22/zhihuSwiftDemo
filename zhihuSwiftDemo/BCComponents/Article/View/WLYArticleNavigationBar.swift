@@ -9,6 +9,14 @@
 import UIKit
 
 class WLYArticleNavigationBar: UIView {
+    let ButtonMargin: CGFloat = 10
+    let ButtonHeight: CGFloat = 38
+    let ButtonWidth: CGFloat = 44
+    
+    var leftButton: UIButton!
+    var titleLabel: UILabel!
+    var rightButton: UIButton!
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -18,9 +26,6 @@ class WLYArticleNavigationBar: UIView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    var leftView: UIImageView?
-    var titleLabel: UILabel?
     
     var title: String? {
         get {
@@ -33,23 +38,39 @@ class WLYArticleNavigationBar: UIView {
     }
     
     func loadContentView() {
-        self.backgroundColor = UIColor.blueColor()
+        self.backgroundColor = UIColor.clearColor()
         
-        self.leftView = UIImageView()
-        self.leftView?.backgroundColor = UIColor.redColor()
-        self.addSubview(self.leftView!)
-        self.leftView?.snp_makeConstraints(closure: { (make) in
-            make.left.equalTo(self).offset(10)
-            make.centerY.equalTo(self)
-            make.width.height.equalTo(44)
-        })
+        self.leftButton = UIButton(type: .Custom)
+        self.addSubview(self.leftButton)
+        self.leftButton.setImage(UIImage.init(named: "Home_Icon_Menu_G"), forState: .Normal)
+        self.leftButton.setImage(UIImage.init(named: "Home_Icon_Menu_G_Highlight"), forState: .Highlighted)
+        self.leftButton.snp_makeConstraints { (make) in
+            make.bottom.equalTo(self)
+            make.left.equalTo(self)
+            make.height.equalTo(ButtonHeight)
+            make.width.equalTo(ButtonWidth)
+        }
         
         self.titleLabel = UILabel()
-        self.titleLabel?.text = "title"
-        self.addSubview(self.titleLabel!)
-        self.titleLabel?.snp_makeConstraints(closure: { (make) in
-            make.center.equalTo(self)
-        })
+        self.addSubview(self.titleLabel)
+        self.titleLabel.text = "今日新闻"
+        self.titleLabel.textColor = UIColor.whiteColor()
+        self.titleLabel.snp_makeConstraints { (make) in
+            make.bottom.equalTo(self)
+            make.centerX.equalTo(self)
+            make.height.equalTo(ButtonHeight)
+        }
+        
+        self.rightButton = UIButton(type: .Custom)
+        self.addSubview(self.rightButton)
+        self.rightButton.setImage(UIImage.init(named: "Dark_Management_Add"), forState: .Normal)
+        self.rightButton.setImage(UIImage.init(named: "Dark_Management_Add"), forState: .Highlighted)
+        self.rightButton.snp_makeConstraints { (make) in
+            make.bottom.equalTo(self)
+            make.right.equalTo(self)
+            make.height.equalTo(ButtonHeight)
+            make.width.equalTo(ButtonWidth)
+        }
     }
 
 }

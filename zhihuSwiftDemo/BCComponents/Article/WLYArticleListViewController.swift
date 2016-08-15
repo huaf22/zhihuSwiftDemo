@@ -8,10 +8,12 @@
 
 import UIKit
 
-class WLYArticleListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class WLYArticleListViewController: WLYViewController, UITableViewDelegate, UITableViewDataSource {
     let PosterImageViewHeight: CGFloat = 200
+    let BarViewHeight = 58
     
     var tableView: UITableView!
+    var topView: UIView!
     var customBar: WLYArticleNavigationBar!
     var scrollImageView: WLYScrollImageView!
     
@@ -32,20 +34,31 @@ class WLYArticleListViewController: UIViewController, UITableViewDelegate, UITab
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        loadContentViews()
-        loadData()
+        self.setupView()
+        self.bindAction()
+        self.loadData()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
         self.navigationController?.setNavigationBarHidden(true, animated: false)
+        self.scrollImageView.startAutoScroll()
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
         self.navigationController?.setNavigationBarHidden(false, animated: false)
+        self.scrollImageView.stopAutoScroll()
+    }
+    
+    func bindAction() {
+        self.customBar.leftButton.addTarget(self, action: #selector(showMenuView), forControlEvents: .TouchUpInside)
+    }
+    
+    func showMenuView() {
+        NSNotificationCenter.defaultCenter().postNotificationName(WLYSideMenuViewController.WLYNoticationNameShowMenuView, object: nil)
     }
     
     func loadData() {
@@ -67,7 +80,7 @@ class WLYArticleListViewController: UIViewController, UITableViewDelegate, UITab
         }
     }
     
-    func loadContentViews() {
+    func setupView() {
         self.tableView = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
         self.view.addSubview(tableView)
         self.tableView.delegate = self;
@@ -87,14 +100,20 @@ class WLYArticleListViewController: UIViewController, UITableViewDelegate, UITab
             make.width.equalTo(self.tableView)
         }
         
+        self.topView = UIView()
+        self.view.addSubview(self.topView)
+        self.topView.backgroundColor = UIColor(rgba: "#028fd6")
+        self.topView.snp_makeConstraints { (make) in
+            make.left.right.top.equalTo(self.view)
+            make.height.equalTo(BarViewHeight)
+        }
+        
         self.customBar = WLYArticleNavigationBar()
         self.view.addSubview(self.customBar)
-        self.customBar?.snp_makeConstraints(closure: { (make) in
-            make.left.right.top.equalTo(self.view)
-            make.height.equalTo(44)
-        })
+        self.customBar.snp_makeConstraints { (make) in
+            make.edges.equalTo(self.topView)
+        }
     }
-    
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.articles?.count ?? 0
@@ -124,7 +143,13 @@ class WLYArticleListViewController: UIViewController, UITableViewDelegate, UITab
         }
         
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        
+    }
+    
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        let alpha: CGFloat = 1 + scrollView.contentOffset.y / PosterImageViewHeight
+        if alpha >= 0 || alpha <= 1 {
+            self.topView.alpha = alpha
+        }
     }
 }
 

@@ -10,7 +10,6 @@ import Foundation
 import UIKit
 
 class HomeViewController: WLYSideMenuViewController, UITableViewDelegate {
-    
     var sideMenus: Array<String>!
     
     var sideMenuView: HomeSideMenuView!

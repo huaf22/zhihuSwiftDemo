@@ -12,9 +12,5 @@ import UIKit
 class WLYViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
     }
-    
-    
 }

@@ -10,13 +10,11 @@ import Foundation
 import UIKit
 
 extension UIView {
-    func wly_height() -> CGFloat {
+    var wly_height: CGFloat {
         return self.frame.size.height
     }
     
-    func wly_width() -> CGFloat {
+    var wly_width: CGFloat {
         return self.frame.size.width
     }
-    
-    
 }

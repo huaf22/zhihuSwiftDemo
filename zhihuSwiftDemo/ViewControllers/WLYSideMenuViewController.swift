@@ -10,6 +10,9 @@ import Foundation
 import UIKit
 
 class WLYSideMenuViewController: WLYViewController , UIScrollViewDelegate {
+    static let WLYNoticationNameShowMenuView = "WLYNoticationNameShowMenuView"
+    static let WLYNoticationNameHideMenuView = "WLYNoticationNameHideMenuView"
+    
     var scrollView: UIScrollView!
     
     var leftMenuView: UIView!
@@ -17,15 +20,20 @@ class WLYSideMenuViewController: WLYViewController , UIScrollViewDelegate {
     
     var currentChildVC: UIViewController?
     
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.loadContentViews()
+        self.bingAction()
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        self.scrollView.setContentOffset(CGPointMake(0.5 * self.scrollView.wly_width(), 0), animated: false)
+        self.scrollView.setContentOffset(CGPointMake(0.5 * self.scrollView.wly_width, 0), animated: false)
     }
     
     func loadContentViews() {
@@ -42,10 +50,9 @@ class WLYSideMenuViewController: WLYViewController , UIScrollViewDelegate {
             make.edges.equalTo(self.view)
         }
         
-        self.scrollView.contentSize = CGSizeMake(self.view.wly_width() * 1.5, self.view.wly_height())
+        self.scrollView.contentSize = CGSizeMake(self.view.wly_width * 1.5, self.view.wly_height)
         
         let contentView = UIView()
-        contentView.backgroundColor = UIColor.blueColor()
         self.scrollView.addSubview(contentView)
         contentView.snp_makeConstraints { (make) in
             make.left.top.equalTo(self.scrollView)
@@ -64,6 +71,21 @@ class WLYSideMenuViewController: WLYViewController , UIScrollViewDelegate {
         self.middleView.snp_makeConstraints { (make) in
             make.left.equalTo(self.leftMenuView.snp_right)
             make.top.bottom.right.equalTo(contentView)
+        }
+    }
+    
+    func bingAction() {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(showMenuView), name: WLYSideMenuViewController.WLYNoticationNameShowMenuView, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(showMenuView), name: WLYSideMenuViewController.WLYNoticationNameHideMenuView, object: nil)
+    }
+    
+    func showMenuView() {
+        self.scrollView.setContentOffset(CGPointZero, animated: true)
+    }
+    
+    func hideMenuView() {
+        if self.scrollView.contentOffset.x > 0 {
+            self.scrollView.setContentOffset(CGPointMake(0.5 * self.scrollView.wly_width, 0), animated: true)
         }
     }
     

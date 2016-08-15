@@ -28,25 +28,25 @@ class WLYArticleDetailToolBarView: UIView {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+        fatalError("init(coder:) has not been implemented")
     }
     
     func setupView() {
         self.backgroundColor = UIColor.whiteColor()
         
-        self.backButton = UIButton()
+        self.backButton = UIButton(type: .Custom)
         self.backButton.setTitle("back", forState: .Normal)
         
-        self.nextButton = UIButton()
+        self.nextButton = UIButton(type: .Custom)
         self.nextButton.setTitle("next", forState: .Normal)
         
-        self.likeButton = UIButton()
+        self.likeButton = UIButton(type: .Custom)
         self.likeButton.setTitle("like", forState: .Normal)
         
-        self.shareButton = UIButton()
+        self.shareButton = UIButton(type: .Custom)
         self.shareButton.setTitle("share", forState: .Normal)
         
-        self.commentButton = UIButton()
+        self.commentButton = UIButton(type: .Custom)
         self.commentButton.setTitle("=", forState: .Normal)
         
         self.buttonArray = [self.backButton, self.nextButton, self.likeButton, self.shareButton, self.commentButton]

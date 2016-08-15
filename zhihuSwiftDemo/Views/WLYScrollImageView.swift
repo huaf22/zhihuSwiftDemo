@@ -27,7 +27,7 @@ class WLYScrollImageView: UIView, UIScrollViewDelegate {
     var imageURLs : Array<NSURL>? {
         didSet {
             self.initScrollViewContent()
-            self.startAutoScrollTimer()
+            self.startAutoScroll()
         }
     }
     
@@ -66,7 +66,7 @@ class WLYScrollImageView: UIView, UIScrollViewDelegate {
   
     func initScrollViewContent() {
         let count = self.imageURLs?.count > 1 ? 3 : 1;
-        self.scrollView.contentSize = CGSizeMake(self.wly_width() * CGFloat(count), self.frame.size.height)
+        self.scrollView.contentSize = CGSizeMake(self.wly_width * CGFloat(count), self.frame.size.height)
         
         //clear all content view
         for view in self.scrollView.subviews {
@@ -75,7 +75,7 @@ class WLYScrollImageView: UIView, UIScrollViewDelegate {
         
         for index in 0..<count {
             let imageView : UIImageView = UIImageView()
-            imageView.frame = CGRectMake(self.wly_width() * CGFloat(index), 0, self.wly_width(), self.wly_height())
+            imageView.frame = CGRectMake(self.wly_width * CGFloat(index), 0, self.wly_width, self.wly_height)
             imageView.tag = BaseTagIndex + index
             
             self.scrollView.addSubview(imageView)
@@ -102,7 +102,7 @@ class WLYScrollImageView: UIView, UIScrollViewDelegate {
         (self.scrollView.viewWithTag(BaseTagIndex + 1) as? UIImageView)!.kf_setImageWithURL(self.imageURLs![self.currentIndex])
         (self.scrollView.viewWithTag(BaseTagIndex + 2) as? UIImageView)!.kf_setImageWithURL(self.imageURLs![rightImageIndex])
         
-        self.scrollView.setContentOffset(CGPointMake(self.scrollView.wly_width(), 0), animated: false)
+        self.scrollView.setContentOffset(CGPointMake(self.scrollView.wly_width, 0), animated: false)
     }
     
     func calcuateCurrentIndex() -> Int {
@@ -110,9 +110,9 @@ class WLYScrollImageView: UIView, UIScrollViewDelegate {
         let totalCount : Int = (self.imageURLs?.count)!
         var index : Int = 0
         
-        if offset.x > self.scrollView.wly_width() {
+        if offset.x > self.scrollView.wly_width {
             index = (self.currentIndex + 1) % totalCount
-        } else if offset.x < self.scrollView.wly_width() {
+        } else if offset.x < self.scrollView.wly_width {
             index = (self.currentIndex + totalCount - 1) % totalCount
         }
         
@@ -136,14 +136,14 @@ class WLYScrollImageView: UIView, UIScrollViewDelegate {
     
     func scrollToNextPage() {
         UIView.animateWithDuration(AnimationDuration, animations: {
-            self.scrollView.setContentOffset(CGPointMake(self.scrollView.wly_width() * 2.0, 0), animated: false)
+            self.scrollView.setContentOffset(CGPointMake(self.scrollView.wly_width * 2.0, 0), animated: false)
         }) { (finished) in
             self.updateScrollViewContent()
         }
     }
     
-    func startAutoScrollTimer() {
-        self.stopTimer()
+    func startAutoScroll() {
+        self.stopAutoScroll()
 
         if self.imageURLs != nil && (self.imageURLs?.count)! > 1  {
             self.scrollTimer = NSTimer.scheduledTimerWithTimeInterval(TimerDuration,
@@ -157,7 +157,7 @@ class WLYScrollImageView: UIView, UIScrollViewDelegate {
         }
     }
     
-    func stopTimer() {
+    func stopAutoScroll() {
         if self.scrollTimer != nil {
             self.scrollTimer?.invalidate()
             self.scrollTimer = nil
