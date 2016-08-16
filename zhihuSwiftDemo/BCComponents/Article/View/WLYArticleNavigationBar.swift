@@ -17,6 +17,8 @@ class WLYArticleNavigationBar: UIView {
     var titleLabel: UILabel!
     var rightButton: UIButton!
     
+    var refreshImageView: WLYRefreshLoadingView!
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -71,6 +73,29 @@ class WLYArticleNavigationBar: UIView {
             make.height.equalTo(ButtonHeight)
             make.width.equalTo(ButtonWidth)
         }
+        
+        self.refreshImageView = WLYRefreshLoadingView()
+        self.refreshImageView.backgroundColor = UIColor.clearColor()
+        self.addSubview(self.refreshImageView)
+        self.refreshImageView.snp_makeConstraints { (make) in
+            make.height.width.equalTo(ButtonHeight)
+            make.bottom.equalTo(self)
+            make.right.equalTo(self.titleLabel.snp_left).offset(-5)
+        }
     }
-
+    
+    func showPullProgress(ratio: CGFloat) {
+        print("WLYArticleNavigationBar showPullProgress")
+        self.refreshImageView.showPullProgress(ratio)
+    }
+    
+    func startLoading() {
+        print("WLYArticleNavigationBar startLoading")
+        self.refreshImageView.startLoading()
+    }
+    
+    func stopLoading() {
+        print("WLYArticleNavigationBar stopLoading")
+        self.refreshImageView.stopLoading()
+    }
 }

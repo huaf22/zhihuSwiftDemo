@@ -7,15 +7,20 @@
 //
 
 import UIKit
+import SnapKit
 
-class WLYArticleListViewController: WLYViewController, UITableViewDelegate, UITableViewDataSource {
+class WLYArticleListViewController: WLYTableViewController, UITableViewDataSource {
+
+    let BarViewHeight: CGFloat = 58
+    let TableCellHeight: CGFloat = 50
     let PosterImageViewHeight: CGFloat = 200
-    let BarViewHeight = 58
-    
-    var tableView: UITableView!
+
     var topView: UIView!
     var customBar: WLYArticleNavigationBar!
     var scrollImageView: WLYScrollImageView!
+    
+    var scrollViewTopConstraint: Constraint!
+    var scrollViewHeightConstraint: Constraint!
     
     var articles: Array<WLYArticle>? {
         didSet {
@@ -33,6 +38,8 @@ class WLYArticleListViewController: WLYViewController, UITableViewDelegate, UITa
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.triggerRefreshHeigh = 75
         
         self.setupView()
         self.bindAction()
@@ -77,26 +84,26 @@ class WLYArticleListViewController: WLYViewController, UITableViewDelegate, UITa
             } else {
                 
             }
+            self.stopRefresh()
         }
     }
     
     func setupView() {
-        self.tableView = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
-        self.view.addSubview(tableView)
-        self.tableView.delegate = self;
+
+
+
         self.tableView.dataSource = self;
-         self.tableView.contentInset = UIEdgeInsetsMake(PosterImageViewHeight, 0, 0, 0)
+        self.tableView.contentInset = UIEdgeInsetsMake(PosterImageViewHeight, 0, 0, 0)
         self.tableView.registerClass(WLYArticleTableViewCell.self , forCellReuseIdentifier: WLYArticleTableViewCell.identifier)
-        self.tableView.snp_makeConstraints(closure: { (make) in
-            make.edges.equalTo(self.view)
-        })
+    
         
         self.scrollImageView = WLYScrollImageView()
         self.tableView.addSubview(self.scrollImageView)
+        self.scrollImageView.clipsToBounds = true
         self.scrollImageView.snp_makeConstraints { (make) in
             make.left.right.equalTo(self.tableView)
-            make.top.equalTo(self.tableView).offset(-PosterImageViewHeight)
-            make.height.equalTo(PosterImageViewHeight)
+            self.scrollViewTopConstraint =  make.top.equalTo(self.tableView).offset(-PosterImageViewHeight).constraint
+            self.scrollViewHeightConstraint = make.height.equalTo(PosterImageViewHeight).constraint
             make.width.equalTo(self.tableView)
         }
         
@@ -120,7 +127,7 @@ class WLYArticleListViewController: WLYViewController, UITableViewDelegate, UITa
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 50.0;
+        return TableCellHeight;
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -134,8 +141,6 @@ class WLYArticleListViewController: WLYViewController, UITableViewDelegate, UITa
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        NSLog("didSelectRowAtIndexPath: \(indexPath.row)")
-
         if let article = self.articles?[indexPath.row] {
             let articleDetailVC = WLYArticleDetailViewController()
             articleDetailVC.articleID = article.id!
@@ -145,11 +150,41 @@ class WLYArticleListViewController: WLYViewController, UITableViewDelegate, UITa
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
     
-    func scrollViewDidScroll(scrollView: UIScrollView) {
+    override func scrollViewDidScroll(scrollView: UIScrollView) {
+        super.scrollViewDidScroll(scrollView)
+        
         let alpha: CGFloat = 1 + scrollView.contentOffset.y / PosterImageViewHeight
         if alpha >= 0 || alpha <= 1 {
             self.topView.alpha = alpha
         }
+        
+        let y = scrollView.contentOffset.y
+        if y <= 0 {
+            self.scrollViewTopConstraint.updateOffset(y)
+            self.scrollViewHeightConstraint.updateOffset(-y)
+        }
+    }
+    
+    override func didPulling() {
+        super.didPulling()
+        
+        let ratio: CGFloat = (self.tableView.contentOffset.y + PosterImageViewHeight) / -self.triggerRefreshHeigh
+        self.customBar.showPullProgress(ratio)
+        print("ratio: \(ratio)")
+
+    }
+    
+    override func didRefreshing() {
+        super.didRefreshing()
+        
+        self.customBar.startLoading()
+        self.loadData()
+    }
+
+    override func stopRefresh() {
+        super.stopRefresh()
+        
+        self.customBar.stopLoading()
     }
 }
 

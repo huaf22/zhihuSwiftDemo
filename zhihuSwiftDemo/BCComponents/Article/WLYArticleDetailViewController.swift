@@ -80,7 +80,7 @@ class WLYArticleDetailViewController: WLYViewController, UIScrollViewDelegate, U
     }
     
     func loadData() {
-        ArticleService.requestArticleDetail("3892357") { (articleDetail: WLYArticleDetail?, error: NSError?) in
+        ArticleService.requestArticleDetail("\(articleID)") { (articleDetail: WLYArticleDetail?, error: NSError?) in
             if error == nil {
                 if let htmlString = ArticleHTMLParser.parseHTML(articleDetail!) {
                     self.webView.loadHTMLString(htmlString, baseURL: nil)

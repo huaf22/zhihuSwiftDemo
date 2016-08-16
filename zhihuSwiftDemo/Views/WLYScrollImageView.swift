@@ -74,11 +74,15 @@ class WLYScrollImageView: UIView, UIScrollViewDelegate {
         }
         
         for index in 0..<count {
-            let imageView : UIImageView = UIImageView()
-            imageView.frame = CGRectMake(self.wly_width * CGFloat(index), 0, self.wly_width, self.wly_height)
-            imageView.tag = BaseTagIndex + index
-            
+            let imageView = UIImageView()
             self.scrollView.addSubview(imageView)
+            imageView.tag = BaseTagIndex + index
+            imageView.contentMode = .ScaleAspectFill
+            imageView.snp_makeConstraints { (make) in
+                make.left.equalTo(self.wly_width * CGFloat(index))
+                make.top.bottom.equalTo(self)
+                make.width.equalTo(self.wly_width)
+            }
         }
         
         self.pageControl.numberOfPages = self.imageURLs != nil ? (self.imageURLs?.count)! : 0
