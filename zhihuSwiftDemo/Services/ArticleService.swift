@@ -19,7 +19,8 @@ class ArticleService {
                 case .Success:
                     if let dailyArticle = response.result.value {
                         print("dailyArticle: \(dailyArticle)")
-
+                        WLYArticleCacheService.cacheDailyArticle(dailyArticle)
+                        
                         completion(dailyArticle, nil)
                     }
                 case .Failure(let error):
@@ -35,6 +36,9 @@ class ArticleService {
                 switch response.result {
                 case .Success:
                     if let articleDetail = response.result.value {
+                        
+                        WLYArticleCacheService.cacheArticleDetail(articleDetail)
+                        
                         completion(articleDetail, nil)
                     }
                 case .Failure(let error):

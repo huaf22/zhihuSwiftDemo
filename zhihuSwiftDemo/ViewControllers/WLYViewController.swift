@@ -13,4 +13,8 @@ class WLYViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
+    
+    func popViewController() {
+        self.navigationController?.popViewControllerAnimated(true)
+    }
 }

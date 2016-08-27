@@ -89,9 +89,6 @@ class WLYArticleListViewController: WLYTableViewController, UITableViewDataSourc
     }
     
     func setupView() {
-
-
-
         self.tableView.dataSource = self;
         self.tableView.contentInset = UIEdgeInsetsMake(PosterImageViewHeight, 0, 0, 0)
         self.tableView.registerClass(WLYArticleTableViewCell.self , forCellReuseIdentifier: WLYArticleTableViewCell.identifier)
@@ -141,11 +138,15 @@ class WLYArticleListViewController: WLYTableViewController, UITableViewDataSourc
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if let article = self.articles?[indexPath.row] {
-            let articleDetailVC = WLYArticleDetailViewController()
-            articleDetailVC.articleID = article.id!
-            self.navigationController?.pushViewController(articleDetailVC, animated: true)
-        }
+        
+        let articleDetailVC = WLYArticleDetailCollectionViewController()//WLYArticleDetailViewController()
+        let articleIDs: Array<String>? = self.articles?.map({ (article: WLYArticle) -> String in
+            return "\(article.id!)"
+        })
+        
+        articleDetailVC.articleIDs = articleIDs!
+        articleDetailVC.currentIndex = indexPath.row
+        self.navigationController?.pushViewController(articleDetailVC, animated: true)
         
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
