@@ -63,7 +63,6 @@ class WLYArticleDetailCollectionViewController: WLYViewController, UICollectionV
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
         self.collectionView.backgroundColor = UIColor.whiteColor()
-//        self.collectionView.pagingEnabled = true
         self.collectionView.scrollEnabled = false
         self.collectionView.registerClass(WLYArticleDetailCell.self, forCellWithReuseIdentifier: kCellReuse) // UICollectionViewCell
         self.collectionView.snp_makeConstraints { (make) in
@@ -87,22 +86,9 @@ class WLYArticleDetailCollectionViewController: WLYViewController, UICollectionV
         self.collectionView.scrollToItemAtIndexPath(indexPath, atScrollPosition: .Top, animated: animated)
     }
     
-    // MARK: UICollectionViewDelegateFlowLayout
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         return CGSize(width: self.view.wly_width, height: self.view.wly_height) // The size of one cell
     }
-    
-//    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-//        return CGSizeZero
-//    }
-//    
-//    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-//        return UIEdgeInsetsZero
-//    }
-//    
-//    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-//        return 1
-//    }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.articleIDs.count

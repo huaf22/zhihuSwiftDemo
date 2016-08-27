@@ -15,4 +15,5 @@ class BaseServiceAPI {
     static let APIArticleDetail = APIBase + "/news/"
     
     static let APIArticleThemes = APIBase + "/themes"
+    static let APIArticleThemeDetails = APIBase + "/theme/"
 }

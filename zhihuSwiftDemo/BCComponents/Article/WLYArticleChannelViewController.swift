@@ -11,22 +11,24 @@ import SnapKit
 
 class WLYArticleChannelViewController: WLYTableViewController, UITableViewDataSource {
     
+    let BarViewHeight: CGFloat = 58
     let TableCellHeight: CGFloat = 95
     
     var customBar: WLYArticleNavigationBar!
+    var posterImageView: UIImageView!
     
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-    }
+    var articles: Array<WLYArticle>?
     
-    var channel: WLYArticleTheme? {
+    var theme: WLYArticleTheme? {
         didSet {
             self.loadData()
         }
     }
     
-    var articles: Array<WLYArticle>?
-    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -50,28 +52,30 @@ class WLYArticleChannelViewController: WLYTableViewController, UITableViewDataSo
     }
     
     func setupView() {
-        self.tableView.dataSource = self
-        self.tableView.registerClass(WLYArticleTableViewCell.self , forCellReuseIdentifier: WLYArticleTableViewCell.identifier)
+        self.posterImageView = UIImageView()
+        self.view.addSubview(self.posterImageView)
+        self.posterImageView.clipsToBounds = true
+        self.posterImageView.contentMode = .ScaleAspectFill
+        self.posterImageView.frame = CGRectMake(0, 0, self.view.wly_width, BarViewHeight);
         
         self.customBar = WLYArticleNavigationBar()
         self.view.addSubview(self.customBar)
-        self.customBar.snp_makeConstraints { (make) in
-            make.edges.equalTo(self.view)
-        }
+        self.customBar.frame = CGRectMake(0, 0, self.view.wly_width, BarViewHeight);
+        
+        self.tableView.dataSource = self
+        self.tableView.registerClass(WLYArticleTableViewCell.self , forCellReuseIdentifier: WLYArticleTableViewCell.identifier)
+        self.tableView.frame = CGRectMake(0, BarViewHeight, self.view.wly_width, self.view.wly_height);
     }
     
     func loadData() {
-        ArticleService.requestLatestArticles { (dailyArticle: WLYDailyArticle?, error: NSError?) in
+        ArticleService.requestThemeArticlesWithID((theme?.id)!) { (themeArticles: WLYThemeArticles?, error: NSError?) in
             if error == nil {
-                self.articles = dailyArticle?.articles
-                
-                var imageURLs =  Array<NSURL>()
-                for article in (dailyArticle?.articles)! {
-                    if let imageURL = article.imageURLs?[0] {
-                        imageURLs.append(imageURL)
-                    }
-                }
+                self.articles = themeArticles?.articles
+                self.customBar.title = themeArticles?.name
+                self.posterImageView.kf_setImageWithURL(themeArticles?.ImageURL)
+                self.tableView.reloadData()
             } else {
+                
                 // handle error result
             }
             self.stopRefresh()
@@ -98,7 +102,7 @@ class WLYArticleChannelViewController: WLYTableViewController, UITableViewDataSo
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        let articleDetailVC = WLYArticleDetailCollectionViewController()//WLYArticleDetailViewController()
+        let articleDetailVC = WLYArticleDetailCollectionViewController()
         let articleIDs: Array<String>? = self.articles?.map({ (article: WLYArticle) -> String in
             return "\(article.id!)"
         })
@@ -108,6 +112,17 @@ class WLYArticleChannelViewController: WLYTableViewController, UITableViewDataSo
         self.navigationController?.pushViewController(articleDetailVC, animated: true)
         
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    }
+    
+    override func scrollViewDidScroll(scrollView: UIScrollView) {
+        super.scrollViewDidScroll(scrollView)
+        
+        let y = scrollView.contentOffset.y
+        if y <= 0 && y >= -BarViewHeight {
+            var rect = self.posterImageView.frame
+            rect.size.height = BarViewHeight - y
+            self.posterImageView.frame = rect
+        }
     }
     
     override func didPulling() {

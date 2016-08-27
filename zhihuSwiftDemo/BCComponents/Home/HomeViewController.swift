@@ -63,7 +63,7 @@ class HomeViewController: WLYSideMenuViewController, UITableViewDelegate {
         if indexPath.row == 0 {
             self.showViewController(self.articleListVC)
         } else {
-            self.articleChannelListVC.channel = self.themeArray?[indexPath.row]
+            self.articleChannelListVC.theme = self.themeArray?[indexPath.row]
             self.showViewController(self.articleChannelListVC)
         }
     }

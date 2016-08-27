@@ -14,8 +14,7 @@ class WLYArticleListViewController: WLYTableViewController, UITableViewDataSourc
     let BarViewHeight: CGFloat = 58
     let TableCellHeight: CGFloat = 95
     let PosterImageViewHeight: CGFloat = 200
-
-    var topView: UIView!
+    
     var customBar: WLYArticleNavigationBar!
     var scrollImageView: WLYScrollImageView!
     
@@ -94,7 +93,9 @@ class WLYArticleListViewController: WLYTableViewController, UITableViewDataSourc
         self.tableView.dataSource = self
         self.tableView.contentInset = UIEdgeInsetsMake(PosterImageViewHeight, 0, 0, 0)
         self.tableView.registerClass(WLYArticleTableViewCell.self , forCellReuseIdentifier: WLYArticleTableViewCell.identifier)
-    
+        self.tableView.snp_makeConstraints { (make) in
+            make.edges.equalTo(self.view)
+        }
         
         self.scrollImageView = WLYScrollImageView()
         self.tableView.addSubview(self.scrollImageView)
@@ -106,18 +107,12 @@ class WLYArticleListViewController: WLYTableViewController, UITableViewDataSourc
             make.width.equalTo(self.tableView)
         }
         
-        self.topView = UIView()
-        self.view.addSubview(self.topView)
-        self.topView.backgroundColor = UIColor(rgba: "#028fd6")
-        self.topView.snp_makeConstraints { (make) in
-            make.left.right.top.equalTo(self.view)
-            make.height.equalTo(BarViewHeight)
-        }
-        
         self.customBar = WLYArticleNavigationBar()
         self.view.addSubview(self.customBar)
+        self.customBar.backgroundColor = UIColor(rgba: "#028fd6")
         self.customBar.snp_makeConstraints { (make) in
-            make.edges.equalTo(self.topView)
+            make.left.right.top.equalTo(self.view)
+            make.height.equalTo(BarViewHeight)
         }
     }
     
@@ -158,7 +153,7 @@ class WLYArticleListViewController: WLYTableViewController, UITableViewDataSourc
         
         let alpha: CGFloat = 1 + scrollView.contentOffset.y / PosterImageViewHeight
         if alpha >= 0 || alpha <= 1 {
-            self.topView.alpha = alpha
+            self.customBar.alpha = alpha
         }
         
         let y = scrollView.contentOffset.y
@@ -174,7 +169,6 @@ class WLYArticleListViewController: WLYTableViewController, UITableViewDataSourc
         let ratio: CGFloat = (self.tableView.contentOffset.y + PosterImageViewHeight) / -self.triggerRefreshHeigh
         self.customBar.showPullProgress(ratio)
         print("ratio: \(ratio)")
-
     }
     
     override func didRefreshing() {

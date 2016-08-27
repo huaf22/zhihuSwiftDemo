@@ -60,4 +60,18 @@ class ArticleService {
                 }
         }
     }
+    
+    static func requestThemeArticlesWithID(id: Int, completion: (WLYThemeArticles?, NSError?) -> Void ) {
+        Alamofire.request(.GET, BaseServiceAPI.APIArticleThemeDetails + "\(id)", parameters: nil)
+            .responseObject { (response: Response<WLYThemeArticles, NSError>) in
+                switch response.result {
+                case .Success:
+                    if let result = response.result.value {
+                        completion(result, nil)
+                    }
+                case .Failure(let error):
+                    completion(nil, error)
+                }
+        }
+    }
 }

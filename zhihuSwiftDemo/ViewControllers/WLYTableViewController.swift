@@ -28,15 +28,12 @@ class WLYTableViewController: WLYViewController, UITableViewDelegate {
         self.tableView = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
         self.view.addSubview(tableView)
         self.tableView.delegate = self;
-        self.tableView.snp_makeConstraints { (make) in
-            make.edges.equalTo(self.view)
-        }
     }
     
     func scrollViewDidScroll(scrollView: UIScrollView) {
         let y = scrollView.contentOffset.y
         
-        if y < -scrollView.contentInset.top {  //
+        if y < -scrollView.contentInset.top {
             if scrollView.dragging {
                 if self.loadingStatus == .Normal {
                     self.loadingStatus = .Pulling
