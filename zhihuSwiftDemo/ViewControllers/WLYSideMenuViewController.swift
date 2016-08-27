@@ -15,24 +15,31 @@ class WLYSideMenuViewController: WLYViewController , UIScrollViewDelegate {
     
     var scrollView: UIScrollView!
     
-    var leftMenuView: UIView!
-    var middleView: UIView!
+    var leftView: UIView!
+    var mainView: UIView!
     
     var currentChildVC: UIViewController?
     
+    var panRecognizer: UIPanGestureRecognizer!
+    var isPanRecognizerAdded: Bool = false
+    
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        self.removeObserver()
+        self.removeRecognizer()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(scrollToMainView))
+        
         self.loadContentViews()
-        self.bingAction()
+        self.bindObserver()
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        
         self.scrollView.setContentOffset(CGPointMake(0.5 * self.scrollView.wly_width, 0), animated: false)
     }
     
@@ -60,32 +67,63 @@ class WLYSideMenuViewController: WLYViewController , UIScrollViewDelegate {
             make.width.equalTo(self.scrollView).multipliedBy(1.5)
         }
         
-        contentView.addSubview(self.leftMenuView!)
-        self.leftMenuView?.snp_makeConstraints { (make) in
+        
+        self.leftView = UIView()
+        contentView.addSubview(self.leftView!)
+        self.leftView?.snp_makeConstraints { (make) in
             make.left.top.bottom.equalTo(contentView)
             make.width.equalTo(contentView).dividedBy(3)
         }
         
-        self.middleView = UIView()
-        contentView.addSubview(self.middleView)
-        self.middleView.snp_makeConstraints { (make) in
-            make.left.equalTo(self.leftMenuView.snp_right)
+        self.mainView = UIView()
+        contentView.addSubview(self.mainView)
+        self.mainView.snp_makeConstraints { (make) in
+            make.left.equalTo(self.leftView.snp_right)
             make.top.bottom.right.equalTo(contentView)
         }
     }
     
-    func bingAction() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(showMenuView), name: WLYSideMenuViewController.WLYNoticationNameShowMenuView, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(showMenuView), name: WLYSideMenuViewController.WLYNoticationNameHideMenuView, object: nil)
+    func bindObserver() {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(scrollToLeftView), name: WLYSideMenuViewController.WLYNoticationNameShowMenuView, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(scrollToMainView), name: WLYSideMenuViewController.WLYNoticationNameHideMenuView, object: nil)
     }
     
-    func showMenuView() {
+    func removeObserver() {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    func bindRecognizer() {
+        if !self.isPanRecognizerAdded {
+            self.view.addGestureRecognizer(self.panRecognizer)
+            self.isPanRecognizerAdded = true
+        }
+    }
+    
+    func removeRecognizer() {
+        if self.isPanRecognizerAdded {
+            self.mainView.removeGestureRecognizer(self.panRecognizer)
+            self.isPanRecognizerAdded = false
+        }
+    }
+    
+    func scrollToLeftView() {
         self.scrollView.setContentOffset(CGPointZero, animated: true)
     }
     
-    func hideMenuView() {
+    func scrollToMainView() {
         if self.scrollView.contentOffset.x > 0 {
             self.scrollView.setContentOffset(CGPointMake(0.5 * self.scrollView.wly_width, 0), animated: true)
+        }
+    }
+    
+    func showLeftView(view: UIView) {
+        for subView in self.leftView.subviews {
+            subView.removeFromSuperview()
+        }
+        
+        self.leftView.addSubview(view)
+        view.snp_makeConstraints { (make) in
+            make.edges.equalTo(self.leftView)
         }
     }
     
@@ -93,20 +131,26 @@ class WLYSideMenuViewController: WLYViewController , UIScrollViewDelegate {
         for viewController in self.childViewControllers {
             viewController.removeFromParentViewController()
         }
-        for view in self.middleView.subviews {
+        for view in self.mainView.subviews {
             view.removeFromSuperview()
         }
         
         self.addChildViewController(vc)
-        self.middleView.addSubview(vc.view)
+        
+        self.mainView.addSubview(vc.view)
         vc.view.snp_makeConstraints { (make) in
-            make.edges.equalTo(self.middleView)
+            make.edges.equalTo(self.mainView)
         }
         
         self.currentChildVC = vc
     }
     
     func scrollViewDidScroll(scrollView: UIScrollView) {
-        
+        let x = scrollView.contentOffset.x
+        if x >= self.scrollView.wly_width / 2 {
+            self.bindRecognizer()
+        } else {
+            self.removeRecognizer()
+        }
     }
 }

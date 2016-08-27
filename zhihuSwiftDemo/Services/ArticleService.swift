@@ -46,4 +46,18 @@ class ArticleService {
                 }
         }
     }
+    
+    static func requestArticleThemes(completion: (WLYArticleThemeResult?, NSError?) -> Void) {
+        Alamofire.request(.GET, BaseServiceAPI.APIArticleThemes, parameters: nil)
+            .responseObject { (response: Response<WLYArticleThemeResult, NSError>) in
+                switch response.result {
+                case .Success:
+                    if let themeResult = response.result.value {
+                        completion(themeResult, nil)
+                    }
+                case .Failure(let error):
+                    completion(nil, error)
+                }
+        }
+    }
 }

@@ -17,7 +17,7 @@ class HomeSideMenuView: UIView, UITableViewDelegate, UITableViewDataSource {
     var footerView: UIView!
     var tableView: UITableView!
     
-    var menuItems: Array<String>! {
+    var menuItems: Array<String>? {
         didSet {
             self.tableView?.reloadData()
         }
@@ -69,7 +69,7 @@ class HomeSideMenuView: UIView, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return menuItems.count
+        return menuItems?.count ?? 0
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -78,10 +78,8 @@ class HomeSideMenuView: UIView, UITableViewDelegate, UITableViewDataSource {
         cell?.selectionStyle = .None
         cell?.backgroundColor = UIColor.wly_backgroundColor
         cell?.textLabel?.textColor = UIColor.wly_darkTextColor
-        cell?.textLabel?.text = self.menuItems[indexPath.row]
+        cell?.textLabel?.text = self.menuItems?[indexPath.row] ?? ""
         
         return cell!
     }
-    
-  
 }

@@ -10,14 +10,15 @@ import Foundation
 import UIKit
 
 class HomeViewController: WLYSideMenuViewController, UITableViewDelegate {
-    var sideMenus: Array<String>!
+    var themeArray: Array<WLYArticleTheme>?
     
     var sideMenuView: HomeSideMenuView!
+    var currentViewController: WLYViewController!
+    
+    var articleListVC: WLYArticleListViewController!
+    var articleChannelListVC: WLYArticleChannelViewController!
     
     override func viewDidLoad() {
-        self.sideMenuView = HomeSideMenuView()
-        self.leftMenuView = sideMenuView
-        
         super.viewDidLoad()
         
         self.setupView()
@@ -25,18 +26,49 @@ class HomeViewController: WLYSideMenuViewController, UITableViewDelegate {
     }
     
     func setupView() {
+        self.sideMenuView = HomeSideMenuView()
         self.sideMenuView.tableView.delegate = self
+        self.showLeftView(self.sideMenuView)
         
-        self.showViewController(WLYArticleListViewController())
+        self.articleListVC = WLYArticleListViewController()
+        self.articleChannelListVC = WLYArticleChannelViewController()
+        
+        self.currentViewController = self.articleListVC
+        self.showViewController(currentViewController)
     }
     
     func loadData() {
-        self.sideMenus = ["首页", "用户推荐日报", "日常心理学", "电影日报", "不许无聊", "设计日报",
-                          "大公司日报", "财经日报", "互联网安全", "开始游戏", "音乐日报", "动漫日报", "体育日报"];
-        self.sideMenuView.menuItems =  self.sideMenus
+        ArticleService.requestArticleThemes { (themeResult: WLYArticleThemeResult?, error: NSError?) in
+            if error == nil && themeResult != nil {
+
+                if let themeArray = themeResult?.themes {
+                    var themeTitles: Array<String> = themeArray.map({ (theme: WLYArticleTheme) -> String in
+                        return theme.name ?? "name"
+                    })
+                    
+                    themeTitles.insert("首页", atIndex: 0)
+                    
+                    self.sideMenuView.menuItems = themeTitles
+                }
+                self.themeArray = themeResult?.themes
+            } else {
+                    //error handler
+            }
+        }
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        print("didSelectRowAtIndexPath \(self.sideMenus[indexPath.row])")
+        print("didSelectRowAtIndexPath \(self.themeArray?[indexPath.row].name)")
+        
+        if indexPath.row == 0 {
+            self.showViewController(self.articleListVC)
+        } else {
+            self.articleChannelListVC.channel = self.themeArray?[indexPath.row]
+            self.showViewController(self.articleChannelListVC)
+        }
+    }
+    
+    override func childViewControllerForStatusBarStyle() -> UIViewController? {
+        return self.currentViewController
     }
 }

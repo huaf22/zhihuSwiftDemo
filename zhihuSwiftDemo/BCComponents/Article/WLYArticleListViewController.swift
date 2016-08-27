@@ -12,7 +12,7 @@ import SnapKit
 class WLYArticleListViewController: WLYTableViewController, UITableViewDataSource {
 
     let BarViewHeight: CGFloat = 58
-    let TableCellHeight: CGFloat = 50
+    let TableCellHeight: CGFloat = 95
     let PosterImageViewHeight: CGFloat = 200
 
     var topView: UIView!
@@ -48,6 +48,8 @@ class WLYArticleListViewController: WLYTableViewController, UITableViewDataSourc
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        
+        self.setNeedsStatusBarAppearanceUpdate()
         
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         self.scrollImageView.startAutoScroll()
@@ -89,7 +91,7 @@ class WLYArticleListViewController: WLYTableViewController, UITableViewDataSourc
     }
     
     func setupView() {
-        self.tableView.dataSource = self;
+        self.tableView.dataSource = self
         self.tableView.contentInset = UIEdgeInsetsMake(PosterImageViewHeight, 0, 0, 0)
         self.tableView.registerClass(WLYArticleTableViewCell.self , forCellReuseIdentifier: WLYArticleTableViewCell.identifier)
     
@@ -124,7 +126,7 @@ class WLYArticleListViewController: WLYTableViewController, UITableViewDataSourc
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return TableCellHeight;
+        return TableCellHeight
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -134,7 +136,7 @@ class WLYArticleListViewController: WLYTableViewController, UITableViewDataSourc
         cell?.titleLabel.text = article?.title
         cell?.logoImageView.kf_setImageWithURL(article?.imageURLs?[0])
         
-        return cell!;
+        return cell!
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -186,6 +188,10 @@ class WLYArticleListViewController: WLYTableViewController, UITableViewDataSourc
         super.stopRefresh()
         
         self.customBar.stopLoading()
+    }
+    
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return .LightContent
     }
 }
 
