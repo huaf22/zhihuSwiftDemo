@@ -13,15 +13,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        WLYLog.setup()
+        
         self.window = UIWindow()
         
         let homeVC = HomeViewController()
         let navigationVC = UINavigationController(rootViewController: homeVC)
         self.window?.rootViewController = navigationVC
         self.window?.makeKeyAndVisible()
-        
+    
         return true
     }
 
