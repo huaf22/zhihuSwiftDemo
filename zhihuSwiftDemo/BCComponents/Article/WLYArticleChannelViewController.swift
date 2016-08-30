@@ -36,6 +36,8 @@ class WLYArticleChannelViewController: WLYTableViewController, UITableViewDataSo
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.triggerRefreshHeigh = 50
+        
         self.setupView()
     }
     
@@ -60,11 +62,12 @@ class WLYArticleChannelViewController: WLYTableViewController, UITableViewDataSo
         
         self.customBar = WLYArticleNavigationBar()
         self.view.addSubview(self.customBar)
+        self.customBar.alpha = 0
         self.customBar.frame = CGRectMake(0, 0, self.view.wly_width, BarViewHeight);
         
         self.tableView.dataSource = self
         self.tableView.registerClass(WLYArticleTableViewCell.self , forCellReuseIdentifier: WLYArticleTableViewCell.identifier)
-        self.tableView.frame = CGRectMake(0, BarViewHeight, self.view.wly_width, self.view.wly_height);
+        self.tableView.frame = CGRectMake(0, BarViewHeight, self.view.wly_width, self.view.wly_height - BarViewHeight);
     }
     
     func loadData() {
@@ -78,7 +81,7 @@ class WLYArticleChannelViewController: WLYTableViewController, UITableViewDataSo
                 
                 // handle error result
             }
-            self.stopRefresh()
+            self.scrollViewDidStopRefresh()
         }
     }
     
@@ -125,23 +128,28 @@ class WLYArticleChannelViewController: WLYTableViewController, UITableViewDataSo
         }
     }
     
-    override func didPulling() {
-        super.didPulling()
+    override func scrollViewDidPull() {
+        super.scrollViewDidPull()
         
         let ratio: CGFloat = (self.tableView.contentOffset.y) / -self.triggerRefreshHeigh
         self.customBar.showPullProgress(ratio)
     }
     
-    override func didRefreshing() {
-        super.didRefreshing()
+    override func scrollViewDidRefresh() {
+        super.scrollViewDidRefresh()
         
         self.customBar.startLoading()
         self.loadData()
     }
     
-    override func stopRefresh() {
-        super.stopRefresh()
+    override func scrollViewDidStopRefresh() {
+        super.scrollViewDidStopRefresh()
         
+
         self.customBar.stopLoading()
+    }
+    
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return .LightContent
     }
 }

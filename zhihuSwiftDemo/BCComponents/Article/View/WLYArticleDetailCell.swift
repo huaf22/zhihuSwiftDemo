@@ -10,20 +10,15 @@ import Foundation
 import UIKit
 
 class WLYArticleDetailCell: UICollectionViewCell, UIScrollViewDelegate {
-    enum WLYTableViewLoadingStatus {
-        case Normal
-        case Pulling
-        case Refreshing
-    }
     
     let ToolViewHeight: CGFloat = 43
     let ImageViewHeight: CGFloat = 220
+    let RefreshHeight: CGFloat = 50
     
     var webView: UIWebView!
     var imageView: UIImageView!
     
     var triggerRefreshHeigh: CGFloat = 50
-    private var loadingStatus: WLYTableViewLoadingStatus = .Normal
     
     var indexPath: NSIndexPath = NSIndexPath(index:0)
     
@@ -59,8 +54,25 @@ class WLYArticleDetailCell: UICollectionViewCell, UIScrollViewDelegate {
         self.imageView.frame = CGRectMake(0, 0, self.wly_width, ImageViewHeight);
         
         self.webView.scrollView.delegate = self
+        self.webView.scrollView.bounces = true
         self.webView.scrollView.contentInset = UIEdgeInsetsMake(0, 0, ToolViewHeight, 0)
         self.webView.scrollView.scrollIndicatorInsets = UIEdgeInsetsMake(ImageViewHeight, 0, ToolViewHeight, 0)
+        
+        
+        // pull to refresh
+        let refreshViewFrame = CGRectMake(0, 0, self.webView.scrollView.wly_width, RefreshHeight)
+        let pullToRefreshView = WLYArticleDetailRefreshView(frame: refreshViewFrame, refreshCompletion: {[weak self] in
+            self?.didScrollToNext!(cell: self!, scrollToNext: false)
+            self?.webView.scrollView.stopPullRefresh()
+        });
+        self.webView.scrollView.addPullRefreshView(pullToRefreshView)
+        
+        let pushToRefreshView = WLYArticleDetailRefreshView(frame: refreshViewFrame, down: false, refreshCompletion: {[weak self] in
+            self?.didScrollToNext!(cell: self!, scrollToNext: true)
+            self?.webView.scrollView.stopPushRefresh()
+
+        });
+        self.webView.scrollView.addPushRefreshView(pushToRefreshView)
     }
     
     func loadData() {
@@ -86,40 +98,6 @@ class WLYArticleDetailCell: UICollectionViewCell, UIScrollViewDelegate {
             rect.origin.y = y
             rect.size.height = ImageViewHeight - y
             self.imageView.frame = rect
-        }
-        
-        if y < -scrollView.contentInset.top ||  y > (scrollView.contentSize.height - scrollView.wly_height) {
-            if scrollView.dragging {
-                if self.loadingStatus == .Normal {
-                    self.loadingStatus = .Pulling
-                } else if self.loadingStatus == .Pulling {
-                    if  y <= (-scrollView.contentInset.top - triggerRefreshHeigh) ||
-                        y >= (scrollView.contentSize.height - scrollView.wly_height + triggerRefreshHeigh + scrollView.contentInset.bottom) {
-                        self.loadingStatus = .Refreshing
-                    }
-                }
-            }
-        }
-    }
-    
-    func scrollViewWillEndDragging(scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        if self.loadingStatus == .Refreshing {
-            self.webView.scrollView.bounces = false
-            
-            if self.didScrollToNext != nil {
-                let y = scrollView.contentOffset.y
-                var scrollToNext = true
-                
-                if y <= scrollView.contentInset.top {
-                    scrollToNext = false
-                }
-                
-                self.didScrollToNext!(cell: self, scrollToNext: scrollToNext)
-            }
-            
-            self.webView.scrollView.bounces = true
-            
-            self.loadingStatus = .Normal
         }
     }
 }

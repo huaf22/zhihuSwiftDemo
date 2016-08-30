@@ -47,10 +47,8 @@ class WLYRefreshLoadingView: UIView {
         super.drawRect(rect)
         
         if shouldShowPath {
-            
-            print("drawRect endAngle: \(self.endAngle)")
-            
-            //创建一个圆弧 传的弧度
+            WLYLog.i("drawRect endAngle: \(self.endAngle)")
+        
             let path = UIBezierPath(arcCenter: self.wly_center,
                                     radius: self.wly_height / 4,
                                     startAngle: degressToRadians(0),

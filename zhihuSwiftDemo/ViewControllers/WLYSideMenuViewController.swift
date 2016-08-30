@@ -9,7 +9,8 @@
 import Foundation
 import UIKit
 
-class WLYSideMenuViewController: WLYViewController , UIScrollViewDelegate {
+class WLYSideMenuViewController: WLYViewController, UIScrollViewDelegate, UIGestureRecognizerDelegate {
+    
     static let WLYNoticationNameShowMenuView = "WLYNoticationNameShowMenuView"
     static let WLYNoticationNameHideMenuView = "WLYNoticationNameHideMenuView"
     
@@ -20,18 +21,12 @@ class WLYSideMenuViewController: WLYViewController , UIScrollViewDelegate {
     
     var currentChildVC: UIViewController?
     
-    var panRecognizer: UIPanGestureRecognizer!
-    var isPanRecognizerAdded: Bool = false
-    
     deinit {
         self.removeObserver()
-        self.removeRecognizer()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(scrollToMainView))
         
         self.loadContentViews()
         self.bindObserver()
@@ -56,6 +51,9 @@ class WLYSideMenuViewController: WLYViewController , UIScrollViewDelegate {
         self.scrollView.snp_makeConstraints { (make) in
             make.edges.equalTo(self.view)
         }
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(scrollToMainView))
+        tapRecognizer.delegate = self
+        self.scrollView.addGestureRecognizer(tapRecognizer)
         
         self.scrollView.contentSize = CGSizeMake(self.view.wly_width * 1.5, self.view.wly_height)
         
@@ -92,28 +90,12 @@ class WLYSideMenuViewController: WLYViewController , UIScrollViewDelegate {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
-    func bindRecognizer() {
-        if !self.isPanRecognizerAdded {
-            self.view.addGestureRecognizer(self.panRecognizer)
-            self.isPanRecognizerAdded = true
-        }
-    }
-    
-    func removeRecognizer() {
-        if self.isPanRecognizerAdded {
-            self.mainView.removeGestureRecognizer(self.panRecognizer)
-            self.isPanRecognizerAdded = false
-        }
-    }
-    
     func scrollToLeftView() {
         self.scrollView.setContentOffset(CGPointZero, animated: true)
     }
     
     func scrollToMainView() {
-        if self.scrollView.contentOffset.x > 0 {
-            self.scrollView.setContentOffset(CGPointMake(0.5 * self.scrollView.wly_width, 0), animated: true)
-        }
+        self.scrollView.setContentOffset(CGPointMake(0.5 * self.scrollView.wly_width, 0), animated: true)
     }
     
     func showLeftView(view: UIView) {
@@ -145,12 +127,19 @@ class WLYSideMenuViewController: WLYViewController , UIScrollViewDelegate {
         self.currentChildVC = vc
     }
     
-    func scrollViewDidScroll(scrollView: UIScrollView) {
-        let x = scrollView.contentOffset.x
-        if x >= self.scrollView.wly_width / 2 {
-            self.bindRecognizer()
-        } else {
-            self.removeRecognizer()
-        }
+//    func scrollViewDidScroll(scrollView: UIScrollView) {
+//        if self.scrollView.contentOffset.x == 0 {
+//            self.mainView.userInteractionEnabled = false
+//        } else {
+//            self.mainView.userInteractionEnabled = true
+//        }
+//    }
+//    
+    
+    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
+        let shouldReceiveTouch = self.scrollView.contentOffset.x == 0 && (touch.locationInView(self.scrollView).x >= self.scrollView.wly_width / 2)
+        WLYLog.d("shouldReceiveTouch: \(shouldReceiveTouch)")
+        return shouldReceiveTouch
     }
+
 }

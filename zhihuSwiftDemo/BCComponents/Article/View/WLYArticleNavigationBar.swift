@@ -13,6 +13,8 @@ class WLYArticleNavigationBar: UIView {
     let ButtonHeight: CGFloat = 38
     let ButtonWidth: CGFloat = 44
     
+    var backgroundView: UIView!
+    
     var leftButton: UIButton!
     var titleLabel: UILabel!
     var rightButton: UIButton!
@@ -22,7 +24,7 @@ class WLYArticleNavigationBar: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        loadContentView()
+        self.setupView()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -39,8 +41,26 @@ class WLYArticleNavigationBar: UIView {
         }
     }
     
-    func loadContentView() {
+    override var alpha: CGFloat {
+        
+        get {
+            return self.backgroundView.alpha
+        }
+        
+        set {
+            self.backgroundView.alpha = newValue
+        }
+    }
+    
+    func setupView() {
         self.backgroundColor = UIColor.clearColor()
+        
+        self.backgroundView = UIView()
+        self.addSubview(self.backgroundView)
+        self.backgroundView.backgroundColor = UIColor(rgba: "#028fd6")
+        self.backgroundView.snp_makeConstraints { (make) in
+            make.edges.equalTo(self)
+        }
         
         self.leftButton = UIButton(type: .Custom)
         self.addSubview(self.leftButton)

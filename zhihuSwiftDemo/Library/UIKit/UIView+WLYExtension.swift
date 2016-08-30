@@ -21,4 +21,17 @@ extension UIView {
     var wly_center: CGPoint {
         return CGPointMake(self.wly_width / 2, self.wly_height / 2)
     }
+    
+    var wly_y: CGFloat {
+        
+        get {
+            return self.frame.origin.y
+        }
+        
+        set {
+            var frame = self.frame
+            frame.origin.y = newValue
+            self.frame = frame
+        }
+    }
 }

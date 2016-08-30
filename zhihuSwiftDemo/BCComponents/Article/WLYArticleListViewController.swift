@@ -38,7 +38,7 @@ class WLYArticleListViewController: WLYTableViewController, UITableViewDataSourc
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.triggerRefreshHeigh = 75
+        self.triggerRefreshHeigh = 50
         
         self.setupView()
         self.bindAction()
@@ -74,7 +74,7 @@ class WLYArticleListViewController: WLYTableViewController, UITableViewDataSourc
             if error == nil {
                 self.articles = dailyArticle?.articles
                 
-                var imageURLs =  Array<NSURL>()
+                var imageURLs = Array<NSURL>()
                 for article in (dailyArticle?.articles)! {
                     if let imageURL = article.imageURLs?[0] {
                         imageURLs.append(imageURL)
@@ -85,8 +85,14 @@ class WLYArticleListViewController: WLYTableViewController, UITableViewDataSourc
             } else {
                 
             }
-            self.stopRefresh()
+//            self.scrollViewDidStopRefresh()
+            
+            let time = dispatch_time(DISPATCH_TIME_NOW, (Int64)(3 * NSEC_PER_SEC))
+            dispatch_after(time, dispatch_get_main_queue()) {
+                self.scrollViewDidStopRefresh()
+            }
         }
+       
     }
     
     func setupView() {
@@ -109,13 +115,13 @@ class WLYArticleListViewController: WLYTableViewController, UITableViewDataSourc
         
         self.customBar = WLYArticleNavigationBar()
         self.view.addSubview(self.customBar)
-        self.customBar.backgroundColor = UIColor(rgba: "#028fd6")
         self.customBar.snp_makeConstraints { (make) in
             make.left.right.top.equalTo(self.view)
             make.height.equalTo(BarViewHeight)
         }
     }
     
+    // MARK: TableView DataSource
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.articles?.count ?? 0
     }
@@ -148,9 +154,10 @@ class WLYArticleListViewController: WLYTableViewController, UITableViewDataSourc
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
     
+    // MARK: ScrollView Delegate
     override func scrollViewDidScroll(scrollView: UIScrollView) {
         super.scrollViewDidScroll(scrollView)
-        
+    
         let alpha: CGFloat = 1 + scrollView.contentOffset.y / PosterImageViewHeight
         if alpha >= 0 || alpha <= 1 {
             self.customBar.alpha = alpha
@@ -163,23 +170,23 @@ class WLYArticleListViewController: WLYTableViewController, UITableViewDataSourc
         }
     }
     
-    override func didPulling() {
-        super.didPulling()
+    override func scrollViewDidPull() {
+        super.scrollViewDidPull()
         
         let ratio: CGFloat = (self.tableView.contentOffset.y + PosterImageViewHeight) / -self.triggerRefreshHeigh
         self.customBar.showPullProgress(ratio)
         print("ratio: \(ratio)")
     }
     
-    override func didRefreshing() {
-        super.didRefreshing()
+    override func scrollViewDidRefresh() {
+        super.scrollViewDidRefresh()
         
         self.customBar.startLoading()
         self.loadData()
     }
-
-    override func stopRefresh() {
-        super.stopRefresh()
+    
+    override func scrollViewDidStopRefresh() {
+        super.scrollViewDidStopRefresh()
         
         self.customBar.stopLoading()
     }

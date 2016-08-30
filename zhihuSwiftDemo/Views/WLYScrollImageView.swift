@@ -157,7 +157,6 @@ class WLYScrollImageView: UIView, UIScrollViewDelegate {
                                                                       repeats: true)
             
             NSRunLoop.currentRunLoop().addTimer(self.scrollTimer!, forMode: NSDefaultRunLoopMode)
-            NSRunLoop.currentRunLoop().runMode(UITrackingRunLoopMode, beforeDate: NSDate.distantFuture())
         }
     }
     
