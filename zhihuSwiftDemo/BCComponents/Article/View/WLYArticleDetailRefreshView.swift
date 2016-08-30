@@ -34,7 +34,7 @@ class WLYArticleDetailRefreshView: WLYPullToRefreshView {
         
         self.arrow = UIImageView(frame: CGRectMake(0, 0, 30, 30))
         self.arrow.autoresizingMask = [.FlexibleLeftMargin, .FlexibleRightMargin]
-        self.arrow.image = UIImage(named: "pulltorefresharrow")
+        self.arrow.image = UIImage(named: "ZHAnswerViewBack")
         
         self.indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
         self.indicator.bounds = self.arrow.bounds

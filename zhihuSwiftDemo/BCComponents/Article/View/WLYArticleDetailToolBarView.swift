@@ -33,32 +33,40 @@ class WLYArticleDetailToolBarView: UIView {
     
     func setupView() {
         self.backgroundColor = UIColor.whiteColor()
-        
+
         self.backButton = UIButton(type: .Custom)
-        self.backButton.setTitle("back", forState: .Normal)
+        self.backButton.setImage(UIImage(named: "News_Navigation_Arrow"), forState: .Normal)
+        self.backButton.setImage(UIImage(named: "News_Navigation_Arrow_Highlight"), forState: .Highlighted)
         
         self.nextButton = UIButton(type: .Custom)
-        self.nextButton.setTitle("next", forState: .Normal)
+        self.nextButton.setImage(UIImage(named: "News_Navigation_Next"), forState: .Normal)
+        self.nextButton.setImage(UIImage(named: "News_Navigation_Next_Highlight"), forState: .Highlighted)
         
         self.likeButton = UIButton(type: .Custom)
-        self.likeButton.setTitle("like", forState: .Normal)
+        self.likeButton.setImage(UIImage(named: "News_Navigation_Vote"), forState: .Normal)
+        self.likeButton.setImage(UIImage(named: "News_Navigation_Voted"), forState: .Highlighted)
         
         self.shareButton = UIButton(type: .Custom)
-        self.shareButton.setTitle("share", forState: .Normal)
+        self.shareButton.setImage(UIImage(named: "News_Navigation_Share"), forState: .Normal)
+        self.shareButton.setImage(UIImage(named: "News_Navigation_Share_Highlight"), forState: .Highlighted)
         
         self.commentButton = UIButton(type: .Custom)
-        self.commentButton.setTitle("=", forState: .Normal)
+        self.commentButton.setImage(UIImage(named: "News_Navigation_Comment"), forState: .Normal)
+        self.commentButton.setImage(UIImage(named: "News_Navigation_Comment_Highlight"), forState: .Highlighted)
         
         self.buttonArray = [self.backButton, self.nextButton, self.likeButton, self.shareButton, self.commentButton]
         
-        let width = UIScreen.mainScreen().bounds.width / CGFloat(self.buttonArray.count + 1)
-        let height = ButtonHeight / 2
         for index in 0..<self.buttonArray.count {
             let button = self.buttonArray[index]
             self.addSubview(button)
-            button.setTitleColor(UIColor.blackColor(), forState: .Normal)
-            button.frame = CGRectMake(0, 0, ButtonWidth, ButtonHeight)
-            button.center = CGPointMake(width * CGFloat(index + 1), height)
+            button.imageView?.contentMode = .ScaleAspectFit
+            
+            let offsetX: CGFloat = UIScreen.mainScreen().bounds.width / CGFloat(self.buttonArray.count + 1) * (CGFloat(index) + 1) - ButtonWidth / 2
+            button.snp_makeConstraints(closure: { (make) in
+                make.top.bottom.equalTo(self)
+                make.width.equalTo(50)
+                make.left.equalTo(self).offset(offsetX)
+            })
         }
     }
     

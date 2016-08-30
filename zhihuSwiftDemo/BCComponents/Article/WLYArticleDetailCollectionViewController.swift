@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class WLYArticleDetailCollectionViewController: WLYViewController, UICollectionViewDelegate, UICollectionViewDataSource,
-                                                UICollectionViewDelegateFlowLayout {
+                                                UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate {
     let ToolViewHeight: CGFloat = 43
     let kCellReuse = "WLYArticleDetailCell"
     
@@ -31,6 +31,8 @@ class WLYArticleDetailCollectionViewController: WLYViewController, UICollectionV
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
         
         self.setupView()
         self.bindAction()
@@ -64,7 +66,7 @@ class WLYArticleDetailCollectionViewController: WLYViewController, UICollectionV
         self.collectionView.dataSource = self
         self.collectionView.backgroundColor = UIColor.whiteColor()
         self.collectionView.scrollEnabled = false
-        self.collectionView.registerClass(WLYArticleDetailCell.self, forCellWithReuseIdentifier: kCellReuse) // UICollectionViewCell
+        self.collectionView.registerClass(WLYArticleDetailCell.self, forCellWithReuseIdentifier: kCellReuse)
         self.collectionView.snp_makeConstraints { (make) in
             make.edges.equalTo(self.view)
         }
