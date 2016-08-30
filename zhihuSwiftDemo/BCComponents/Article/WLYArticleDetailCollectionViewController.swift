@@ -89,7 +89,7 @@ class WLYArticleDetailCollectionViewController: WLYViewController, UICollectionV
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        return CGSize(width: self.view.wly_width, height: self.view.wly_height) // The size of one cell
+        return CGSize(width: self.view.wly_width, height: self.view.wly_height)
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

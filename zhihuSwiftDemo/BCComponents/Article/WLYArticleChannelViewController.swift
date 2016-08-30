@@ -148,8 +148,4 @@ class WLYArticleChannelViewController: WLYTableViewController, UITableViewDataSo
 
         self.customBar.stopLoading()
     }
-    
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return .LightContent
-    }
 }

@@ -83,16 +83,16 @@ class WLYArticleNavigationBar: UIView {
             make.height.equalTo(ButtonHeight)
         }
         
-        self.rightButton = UIButton(type: .Custom)
-        self.addSubview(self.rightButton)
-        self.rightButton.setImage(UIImage.init(named: "Dark_Management_Add"), forState: .Normal)
-        self.rightButton.setImage(UIImage.init(named: "Dark_Management_Add"), forState: .Highlighted)
-        self.rightButton.snp_makeConstraints { (make) in
-            make.bottom.equalTo(self)
-            make.right.equalTo(self)
-            make.height.equalTo(ButtonHeight)
-            make.width.equalTo(ButtonWidth)
-        }
+//        self.rightButton = UIButton(type: .Custom)
+//        self.addSubview(self.rightButton)
+//        self.rightButton.setImage(UIImage.init(named: "Dark_Management_Add"), forState: .Normal)
+//        self.rightButton.setImage(UIImage.init(named: "Dark_Management_Add"), forState: .Highlighted)
+//        self.rightButton.snp_makeConstraints { (make) in
+//            make.bottom.equalTo(self)
+//            make.right.equalTo(self)
+//            make.height.equalTo(ButtonHeight)
+//            make.width.equalTo(ButtonWidth)
+//        }
         
         self.refreshImageView = WLYRefreshLoadingView()
         self.refreshImageView.backgroundColor = UIColor.clearColor()

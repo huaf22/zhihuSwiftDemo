@@ -48,8 +48,6 @@ class WLYArticleListViewController: WLYTableViewController, UITableViewDataSourc
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.setNeedsStatusBarAppearanceUpdate()
-        
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         self.scrollImageView.startAutoScroll()
     }
@@ -190,10 +188,4 @@ class WLYArticleListViewController: WLYTableViewController, UITableViewDataSourc
         
         self.customBar.stopLoading()
     }
-    
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return .LightContent
-    }
 }
-
-
