@@ -15,6 +15,10 @@ class WLYArticleTheme: Mappable {
     var id: Int?
     var name: String?
     
+    init() {
+        
+    }
+    
     required init?(_ map: Map){
         
     }

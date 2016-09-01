@@ -17,7 +17,7 @@ class WLYTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    static var identifier : String {
+    static var identifier: String {
         return NSStringFromClass(WLYTableViewCell.self)
     }
 }

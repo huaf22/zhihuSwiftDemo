@@ -16,10 +16,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         WLYLog.setup()
         
-        self.window = UIWindow()
+        let articleListVC = WLYArticleListViewController()
+        let menuVC = WLYHomeMenuViewController()
+        menuVC.articleListVC = articleListVC
         
-        let homeVC = HomeViewController()
-        let navigationVC = UINavigationController(rootViewController: homeVC)
+        let rootViewController = WLYSideMenuViewController(leftViewController: menuVC, mainViewController: articleListVC)
+        let navigationVC = UINavigationController(rootViewController: rootViewController)
+        
+        self.window = UIWindow()
         self.window?.rootViewController = navigationVC
         self.window?.makeKeyAndVisible()
     

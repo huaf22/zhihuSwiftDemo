@@ -58,7 +58,6 @@ class WLYArticleDetailCell: UICollectionViewCell, UIScrollViewDelegate {
         self.webView.scrollView.contentInset = UIEdgeInsetsMake(0, 0, ToolViewHeight, 0)
         self.webView.scrollView.scrollIndicatorInsets = UIEdgeInsetsMake(ImageViewHeight, 0, ToolViewHeight, 0)
         
-        
         // pull to refresh
         let refreshViewFrame = CGRectMake(0, 0, self.webView.scrollView.wly_width, RefreshHeight)
         let pullToRefreshView = WLYArticleDetailRefreshView(frame: refreshViewFrame, refreshCompletion: {[weak self] in
