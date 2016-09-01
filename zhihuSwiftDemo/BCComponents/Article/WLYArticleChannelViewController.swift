@@ -21,7 +21,9 @@ class WLYArticleChannelViewController: WLYTableViewController, UITableViewDataSo
     
     var theme: WLYArticleTheme? {
         didSet {
-            self.loadData()
+            if self.isViewLoaded() {
+                self.loadData()
+            }
         }
     }
     
@@ -39,6 +41,7 @@ class WLYArticleChannelViewController: WLYTableViewController, UITableViewDataSo
         self.triggerRefreshHeigh = 50
         
         self.setupView()
+        self.loadData()
     }
     
     override func viewWillAppear(animated: Bool) {
