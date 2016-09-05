@@ -32,7 +32,7 @@ class WLYArticleChannelViewController: WLYTableViewController, UITableViewDataSo
     }
 
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
     }
     
     override func viewDidLoad() {
@@ -97,21 +97,21 @@ class WLYArticleChannelViewController: WLYTableViewController, UITableViewDataSo
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(WLYArticleTableViewCell.identifier) as? WLYArticleTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(WLYArticleTableViewCell.identifier) as! WLYArticleTableViewCell
         
         let article = self.articles?[indexPath.row]
-        cell?.titleLabel.text = article?.title
-        cell?.logoImageView.kf_setImageWithURL(article?.imageURLs?[0])
+        cell.titleLabel.text = article?.title
+        cell.logoImageView.kf_setImageWithURL(article?.imageURLs?[0])
         
-        return cell!
+        return cell
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         let articleDetailVC = WLYArticleDetailCollectionViewController()
-        let articleIDs: Array<String>? = self.articles?.map({ (article: WLYArticle) -> String in
+        let articleIDs: Array<String>? = self.articles?.map { (article: WLYArticle) -> String in
             return "\(article.id!)"
-        })
+        }
         
         articleDetailVC.articleIDs = articleIDs!
         articleDetailVC.currentIndex = indexPath.row
@@ -148,7 +148,6 @@ class WLYArticleChannelViewController: WLYTableViewController, UITableViewDataSo
     override func scrollViewDidStopRefresh() {
         super.scrollViewDidStopRefresh()
         
-
         self.customBar.stopLoading()
     }
 }

@@ -12,11 +12,9 @@ import UIKit
 class WLYArticleDetailCollectionViewController: WLYViewController, UICollectionViewDelegate, UICollectionViewDataSource,
                                                 UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate {
     let ToolViewHeight: CGFloat = 43
-    let kCellReuse = "WLYArticleDetailCell"
     
     var collectionView: UICollectionView!
     var toolBar: WLYArticleDetailToolBarView!
-    
     
     var currentIndex: Int = 0
     var articleIDs = Array<String>()
@@ -26,7 +24,7 @@ class WLYArticleDetailCollectionViewController: WLYViewController, UICollectionV
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
     }
     
     override func viewDidLoad() {
@@ -44,16 +42,16 @@ class WLYArticleDetailCollectionViewController: WLYViewController, UICollectionV
         self.navigationController?.navigationBarHidden = true
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        self.scrollCollectionViewToIndex(self.currentIndex, animated: false)
-    }
-    
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
         self.navigationController?.navigationBarHidden = false
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        self.scrollCollectionViewToIndex(self.currentIndex, animated: false)
     }
     
     func setupView() {
@@ -64,9 +62,9 @@ class WLYArticleDetailCollectionViewController: WLYViewController, UICollectionV
         self.view.addSubview(self.collectionView)
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
-        self.collectionView.backgroundColor = UIColor.whiteColor()
         self.collectionView.scrollEnabled = false
-        self.collectionView.registerClass(WLYArticleDetailCell.self, forCellWithReuseIdentifier: kCellReuse)
+        self.collectionView.backgroundColor = UIColor.whiteColor()
+        self.collectionView.registerClass(WLYArticleDetailCell.self, forCellWithReuseIdentifier: WLYArticleDetailCell.identifier)
         self.collectionView.snp_makeConstraints { (make) in
             make.edges.equalTo(self.view)
         }
@@ -97,7 +95,7 @@ class WLYArticleDetailCollectionViewController: WLYViewController, UICollectionV
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell: WLYArticleDetailCell = collectionView.dequeueReusableCellWithReuseIdentifier(kCellReuse, forIndexPath: indexPath) as! WLYArticleDetailCell
+        let cell: WLYArticleDetailCell = collectionView.dequeueReusableCellWithReuseIdentifier(WLYArticleDetailCell.identifier, forIndexPath: indexPath) as! WLYArticleDetailCell
         
         cell.indexPath = indexPath
         cell.articleID = self.articleIDs[indexPath.row]
