@@ -11,7 +11,7 @@ import ObjectMapper
 
 class WLYArticleTheme: Mappable {
     var colorInt: Int?
-    var thumbURL: NSURL?
+    var thumbURL: URL?
     var id: Int?
     var name: String?
     
@@ -19,7 +19,7 @@ class WLYArticleTheme: Mappable {
         
     }
     
-    required init?(_ map: Map){
+    required init?(map: Map){
         
     }
     

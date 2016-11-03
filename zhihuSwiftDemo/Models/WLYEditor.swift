@@ -10,14 +10,14 @@ import Foundation
 import ObjectMapper
 
 class WLYEditor: Mappable {
-    var URL: NSURL?
+    var URL: Foundation.URL?
     
     var id: Int?
-    var avatar: NSURL?
+    var avatar: Foundation.URL?
     var name: String?
     var nickName: String?
     
-    required init?(_ map: Map){
+    required init?(map: Map){
         
     }
     

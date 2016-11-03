@@ -12,31 +12,30 @@ import XCGLogger
 class WLYLog {
     
     static func setup() {
-        let log = XCGLogger.defaultInstance()
-        log.setup(.Debug,
+        let log = XCGLogger.default
+        log.setup(level: .debug,
                   showThreadName: true,
-                  showLogLevel: true,
+                  showLevel: true,
                   showFileNames: true,
                   showLineNumbers: true,
                   writeToFile: "path/to/file",
-                  fileLogLevel: .Debug)
-        
+                  fileLevel: .debug)
     }
     
-    static func i(logMessage: String) {
-        XCGLogger.defaultInstance().info(logMessage)
+    static func i(_ logMessage: String) {
+        XCGLogger.default.info(logMessage)
     }
     
-    static func d(logMessage: String) {
-        XCGLogger.defaultInstance().debug(logMessage)
+    static func d(_ logMessage: String) {
+        XCGLogger.default.debug(logMessage)
     }
     
-    static func w(logMessage: String) {
-        XCGLogger.defaultInstance().warning(logMessage)
+    static func w(_ logMessage: String) {
+        XCGLogger.default.warning(logMessage)
     }
     
-    static func e(logMessage: String) {
-         XCGLogger.defaultInstance().error(logMessage)
+    static func e(_ logMessage: String) {
+         XCGLogger.default.error(logMessage)
     }
     
 }

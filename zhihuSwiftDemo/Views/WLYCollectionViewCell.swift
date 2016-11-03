@@ -19,7 +19,7 @@ class WLYCollectionViewCell: UICollectionViewCell {
     }
     
     static var identifier: String {
-        return NSStringFromClass(WLYCollectionViewCell)
+        return NSStringFromClass(WLYCollectionViewCell.self)
     }
     
 }

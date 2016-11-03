@@ -24,13 +24,13 @@ class WLYHorizontalLayoutButton: UIButton {
         
         if self.imageView != nil && self.titleLabel != nil {
             let imageHW: CGFloat = min((self.imageView?.wly_width)!, (self.imageView?.wly_height)!)
-            self.imageView?.frame = CGRectMake(0, 0, imageHW, imageHW)
+            self.imageView?.frame = CGRect(x: 0, y: 0, width: imageHW, height: imageHW)
             self.imageView?.center.y = self.wly_height / 2
             
             let titleLabelX = self.wly_width - (self.titleLabel?.wly_width)!
-            self.titleLabel?.frame = CGRectMake(titleLabelX, 0, (self.titleLabel?.wly_width)!, (self.titleLabel?.wly_height)!)
+            self.titleLabel?.frame = CGRect(x: titleLabelX, y: 0, width: (self.titleLabel?.wly_width)!, height: (self.titleLabel?.wly_height)!)
             self.titleLabel?.center.y = self.wly_height / 2
-            self.titleLabel?.textAlignment = .Right
+            self.titleLabel?.textAlignment = .right
         }
     }
 }

@@ -9,12 +9,12 @@
 import Foundation
 import UIKit
 
-public class WLYPullToRefreshView: UIView {
+open class WLYPullToRefreshView: UIView {
     enum PullToRefreshState {
-        case Pulling
-        case Triggered
-        case Refreshing
-        case Stop
+        case pulling
+        case triggered
+        case refreshing
+        case stop
     }
     
     // MARK: Variables
@@ -26,12 +26,12 @@ public class WLYPullToRefreshView: UIView {
     var refreshStopTime: Double = 0.2
     
     var scrollViewBounces: Bool = true
-    var scrollViewInsets: UIEdgeInsets = UIEdgeInsetsZero
-    var refreshCompletion: (Void -> Void)?
+    var scrollViewInsets: UIEdgeInsets = UIEdgeInsets.zero
+    var refreshCompletion: ((Void) -> Void)?
     
-    private var pull: Bool = true
+    fileprivate var pull: Bool = true
     
-    private var positionY:CGFloat = 0 {
+    fileprivate var positionY:CGFloat = 0 {
         didSet {
             if self.positionY == oldValue {
                 return
@@ -42,7 +42,7 @@ public class WLYPullToRefreshView: UIView {
         }
     }
     
-    var state: PullToRefreshState = PullToRefreshState.Pulling {
+    var state: PullToRefreshState = PullToRefreshState.pulling {
         didSet {
            
             if self.state == oldValue {
@@ -54,13 +54,13 @@ public class WLYPullToRefreshView: UIView {
             
             print("WLYPullToRefreshView state: \(state)")
             switch self.state {
-            case .Stop:
+            case .stop:
                 stopRefreshAction(scrollView)
-            case .Refreshing:
+            case .refreshing:
                 startRefreshAction(scrollView)
-            case .Pulling:
+            case .pulling:
                 startPullAction(scrollView)
-            case .Triggered:
+            case .triggered:
                 startPullTriggeredAction(scrollView)
             }
         }
@@ -79,29 +79,29 @@ public class WLYPullToRefreshView: UIView {
         self.removeRegister()
     }
     
-    init(frame: CGRect, down:Bool=true, refreshCompletion :(Void -> Void)?) {
+    init(frame: CGRect, down:Bool=true, refreshCompletion :((Void) -> Void)?) {
         self.refreshCompletion = refreshCompletion
     
         self.pull = down
         
         super.init(frame: frame)
-        self.autoresizingMask = .FlexibleWidth
+        self.autoresizingMask = .flexibleWidth
     }
     
-    public override func willMoveToSuperview(superView: UIView!) {
+    open override func willMove(toSuperview superView: UIView!) {
         //superview NOT superView, DO NEED to call the following method
         //superview dealloc will call into this when my own dealloc run later!!
         self.removeRegister()
         guard let scrollView = superView as? UIScrollView else {
             return
         }
-        scrollView.addObserver(self, forKeyPath: contentOffsetKeyPath, options: .Initial, context: &kvoContext)
+        scrollView.addObserver(self, forKeyPath: contentOffsetKeyPath, options: .initial, context: &kvoContext)
         if !pull {
-            scrollView.addObserver(self, forKeyPath: contentSizeKeyPath, options: .Initial, context: &kvoContext)
+            scrollView.addObserver(self, forKeyPath: contentSizeKeyPath, options: .initial, context: &kvoContext)
         }
     }
     
-    private func removeRegister() {
+    fileprivate func removeRegister() {
         if let scrollView = superview as? UIScrollView {
             scrollView.removeObserver(self, forKeyPath: contentOffsetKeyPath, context: &kvoContext)
             if !pull {
@@ -112,7 +112,7 @@ public class WLYPullToRefreshView: UIView {
     
 
     // MARK: KVO
-   public  override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<()>) {
+   open  override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         guard let scrollView = object as? UIScrollView else {
             return
         }
@@ -122,7 +122,7 @@ public class WLYPullToRefreshView: UIView {
         }
         
         if !(context == &kvoContext && keyPath == contentOffsetKeyPath) {
-            super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
+            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
             return
         }
         
@@ -136,14 +136,14 @@ public class WLYPullToRefreshView: UIView {
 
             if offsetY < -self.frame.size.height {
                 // pulling or refreshing
-                if scrollView.dragging == false && self.state != .Refreshing { //release the finger
-                    self.state = .Refreshing //startAnimating
-                } else if self.state != .Refreshing { //reach the threshold
-                    self.state = .Triggered
+                if scrollView.isDragging == false && self.state != .refreshing { //release the finger
+                    self.state = .refreshing //startAnimating
+                } else if self.state != .refreshing { //reach the threshold
+                    self.state = .triggered
                 }
-            } else if self.state == .Triggered {
+            } else if self.state == .triggered {
                 //starting point, start from pulling
-                self.state = .Pulling
+                self.state = .pulling
             }
             return //return for pull down
         }
@@ -157,14 +157,14 @@ public class WLYPullToRefreshView: UIView {
             }
             if upHeight > self.frame.size.height {
                 // pulling or refreshing
-                if scrollView.dragging == false && self.state != .Refreshing { //release the finger
-                    self.state = .Refreshing //startAnimating
-                } else if self.state != .Refreshing { //reach the threshold
-                    self.state = .Triggered
+                if scrollView.isDragging == false && self.state != .refreshing { //release the finger
+                    self.state = .refreshing //startAnimating
+                } else if self.state != .refreshing { //reach the threshold
+                    self.state = .triggered
                 }
-            } else if self.state == .Triggered  {
+            } else if self.state == .triggered  {
                 //starting point, start from pulling
-                self.state = .Pulling
+                self.state = .pulling
             }
         }
     }
@@ -172,21 +172,21 @@ public class WLYPullToRefreshView: UIView {
     /**
      开始下拉
      */
-    func startPullAction(scrollView: UIScrollView) {
+    func startPullAction(_ scrollView: UIScrollView) {
         
     }
     
     /**
      下拉到临界点
      */
-    func startPullTriggeredAction(scrollView: UIScrollView) {
+    func startPullTriggeredAction(_ scrollView: UIScrollView) {
         
     }
     
     /**
      用户松手,开始刷新操作
      */
-    func startRefreshAction(scrollView: UIScrollView) {
+    func startRefreshAction(_ scrollView: UIScrollView) {
         self.scrollViewBounces = scrollView.bounces
         self.scrollViewInsets = scrollView.contentInset
         
@@ -216,10 +216,10 @@ public class WLYPullToRefreshView: UIView {
     /**
      刷新完毕
      */
-    func stopRefreshAction(scrollView: UIScrollView) {
+    func stopRefreshAction(_ scrollView: UIScrollView) {
         scrollView.bounces = self.scrollViewBounces
         scrollView.contentInset = self.scrollViewInsets
-        self.state = .Pulling
+        self.state = .pulling
         
 //        UIView.animateWithDuration(self.refreshStopTime,
 //                                   animations: {

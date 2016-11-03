@@ -26,7 +26,7 @@ class WLYArticleTableViewCell: WLYTableViewCell {
     func loadContentView() {
         self.logoImageView = UIImageView();
         self.contentView.addSubview(self.logoImageView);
-        self.logoImageView.snp_makeConstraints() { (make) in
+        self.logoImageView.snp.makeConstraints() { (make) in
             make.centerY.equalTo(self.contentView)
             make.right.equalTo(self.contentView).offset(-10)
             make.width.height.equalTo(35)
@@ -35,10 +35,10 @@ class WLYArticleTableViewCell: WLYTableViewCell {
         self.titleLabel = UILabel();
         self.contentView.addSubview(self.titleLabel)
         self.titleLabel.numberOfLines = 2
-        self.titleLabel.font = UIFont.systemFontOfSize(15)
-        self.titleLabel.snp_makeConstraints(){ (make) in
+        self.titleLabel.font = UIFont.systemFont(ofSize: 15)
+        self.titleLabel.snp.makeConstraints(){ (make) in
             make.left.equalTo(self.contentView).offset(10)
-            make.right.equalTo(self.logoImageView!.snp_left).offset(-10)
+            make.right.equalTo(self.logoImageView!.snp.left).offset(-10)
             make.top.bottom.equalTo(self.contentView)
         }
     }

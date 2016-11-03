@@ -13,17 +13,17 @@ class WLYArticleDetail: Mappable {
     var body: String?
     var imageSource: String?
     var title: String?
-    var posterURL: NSURL?
+    var posterURL: URL?
     var shareUrl: String?
     var jsArray: Array<String>?
     var gaPrefix: String?
-    var imageURLs: Array<NSURL>?
+    var imageURLs: Array<URL>?
     var type: Int?
     var id: Int?
     var cssArray: Array<String>?
     
     
-    required init?(_ map: Map){
+    required init?(map: Map){
         
     }
     

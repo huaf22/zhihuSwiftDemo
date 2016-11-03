@@ -11,18 +11,18 @@ import UIKit
 
 class WLYTableViewController: WLYViewController, UITableViewDelegate {
     enum PullToRefreshState {
-        case Pulling
-        case Triggered
-        case Refreshing
-        case Stop
+        case pulling
+        case triggered
+        case refreshing
+        case stop
     }
     
     var tableView: UITableView!
     
     var triggerRefreshHeigh: CGFloat = 0
-    private var scrollViewInsets: UIEdgeInsets = UIEdgeInsetsZero
+    fileprivate var scrollViewInsets: UIEdgeInsets = UIEdgeInsets.zero
     
-    var state: PullToRefreshState = .Pulling {
+    var state: PullToRefreshState = .pulling {
 
         didSet {
             if self.state == oldValue {
@@ -31,13 +31,13 @@ class WLYTableViewController: WLYViewController, UITableViewDelegate {
             
             WLYLog.w("state: \(state)")
             switch self.state {
-            case .Stop:
+            case .stop:
                 self.scrollViewDidStopRefresh()
-            case .Refreshing:
+            case .refreshing:
                 self.scrollViewDidRefresh()
-            case .Pulling:
+            case .pulling:
                 self.scrollViewDidPull()
-            case .Triggered:
+            case .triggered:
                 self.scrollViewDidTrigger()
             }
         }
@@ -46,28 +46,28 @@ class WLYTableViewController: WLYViewController, UITableViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.tableView = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
+        self.tableView = UITableView(frame: CGRect.zero, style: UITableViewStyle.plain)
         self.tableView.delegate = self
         self.view.addSubview(tableView)
     }
     
 
-    func scrollViewDidScroll(scrollView: UIScrollView) {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offsetY = scrollView.contentOffset.y
         
         if offsetY <= -self.tableView.contentInset.top {
             if offsetY < -self.tableView.contentInset.top - triggerRefreshHeigh {
-                if scrollView.dragging == false && self.state != .Refreshing { //release the finger
-                    self.state = .Refreshing          //startAnimating
-                } else if self.state != .Refreshing { //reach the threshold
-                    self.state = .Triggered
+                if scrollView.isDragging == false && self.state != .refreshing { //release the finger
+                    self.state = .refreshing          //startAnimating
+                } else if self.state != .refreshing { //reach the threshold
+                    self.state = .triggered
                 }
-            } else if self.state == .Triggered {
+            } else if self.state == .triggered {
                 //starting point, start from pulling
-                self.state = .Pulling
+                self.state = .pulling
             }
             
-            if self.state == .Pulling {
+            if self.state == .pulling {
                 self.scrollViewDidPull()
             }
         }
@@ -91,7 +91,7 @@ class WLYTableViewController: WLYViewController, UITableViewDelegate {
     }
     
     func scrollViewDidStopRefresh() {
-        self.state = .Pulling
+        self.state = .pulling
 //        self.tableView.bounces = true
     }
 }

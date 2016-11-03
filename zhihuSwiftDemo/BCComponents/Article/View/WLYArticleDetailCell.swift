@@ -20,9 +20,9 @@ class WLYArticleDetailCell: WLYCollectionViewCell, UIScrollViewDelegate {
     
     var triggerRefreshHeigh: CGFloat = 50
     
-    var indexPath: NSIndexPath = NSIndexPath(index:0)
+    var indexPath: IndexPath = IndexPath(index:0)
     
-    var didScrollToNext: ((cell: WLYArticleDetailCell, scrollToNext: Bool) -> Void)?
+    var didScrollToNext: ((_ cell: WLYArticleDetailCell, _ scrollToNext: Bool) -> Void)?
     
     var articleID: String! {
         didSet {
@@ -43,15 +43,15 @@ class WLYArticleDetailCell: WLYCollectionViewCell, UIScrollViewDelegate {
     func setupView() {
         self.webView = UIWebView()
         self.addSubview(self.webView)
-        self.webView.snp_makeConstraints { (make) in
+        self.webView.snp.makeConstraints { (make) in
             make.edges.equalTo(self)
         }
         
         self.imageView = UIImageView()
         self.webView.scrollView.addSubview(self.imageView)
         self.imageView.clipsToBounds = true
-        self.imageView.contentMode = .ScaleAspectFill
-        self.imageView.frame = CGRectMake(0, 0, self.wly_width, ImageViewHeight);
+        self.imageView.contentMode = .scaleAspectFill
+        self.imageView.frame = CGRect(x: 0, y: 0, width: self.wly_width, height: ImageViewHeight);
         
         self.webView.scrollView.delegate = self
         self.webView.scrollView.bounces = true
@@ -59,15 +59,15 @@ class WLYArticleDetailCell: WLYCollectionViewCell, UIScrollViewDelegate {
         self.webView.scrollView.scrollIndicatorInsets = UIEdgeInsetsMake(ImageViewHeight, 0, ToolViewHeight, 0)
         
         // pull to refresh
-        let refreshViewFrame = CGRectMake(0, 0, self.webView.scrollView.wly_width, RefreshHeight)
+        let refreshViewFrame = CGRect(x: 0, y: 0, width: self.webView.scrollView.wly_width, height: RefreshHeight)
         let pullToRefreshView = WLYArticleDetailRefreshView(frame: refreshViewFrame, refreshCompletion: {[weak self] in
-            self?.didScrollToNext!(cell: self!, scrollToNext: false)
+            self?.didScrollToNext!(self!, false)
             self?.webView.scrollView.stopPullRefresh()
         });
         self.webView.scrollView.addPullRefreshView(pullToRefreshView)
         
         let pushToRefreshView = WLYArticleDetailRefreshView(frame: refreshViewFrame, down: false, refreshCompletion: {[weak self] in
-            self?.didScrollToNext!(cell: self!, scrollToNext: true)
+            self?.didScrollToNext!(self!, true)
             self?.webView.scrollView.stopPushRefresh()
 
         });
@@ -76,11 +76,11 @@ class WLYArticleDetailCell: WLYCollectionViewCell, UIScrollViewDelegate {
     
     func loadData() {
         if self.articleID != nil && !articleID.isEmpty {
-            ArticleService.requestArticleDetail(self.articleID) { (articleDetail: WLYArticleDetail?, error: NSError?) in
+            ArticleService.requestArticleDetail(self.articleID) { (articleDetail, error) in
                 if error == nil {
                     if let htmlString = ArticleHTMLParser.parseHTML(articleDetail!) {
                         self.webView.loadHTMLString(htmlString, baseURL: nil)
-                        self.imageView.kf_setImageWithURL(articleDetail?.posterURL)
+                        self.imageView.kf.setImage(with: articleDetail?.posterURL)
                         return
                     }
                 } else {
@@ -90,7 +90,7 @@ class WLYArticleDetailCell: WLYCollectionViewCell, UIScrollViewDelegate {
         }
     }
     
-    func scrollViewDidScroll(scrollView: UIScrollView) {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let y = scrollView.contentOffset.y
         if y <= 0 {
             var rect = self.imageView.frame

@@ -12,14 +12,14 @@ import ObjectMapper
 class WLYThemeArticles: Mappable {
     var articles: Array<WLYArticle>?
     var desc: String?
-    var backgroundImageURL: NSURL?
+    var backgroundImageURL: URL?
     var color: Int?
     var name: String?
-    var ImageURL: NSURL?
+    var ImageURL: URL?
     var editors: Array<WLYEditor>?
     var imageSource: String?
     
-    required init?(_ map: Map){
+    required init?(map: Map){
         
     }
     

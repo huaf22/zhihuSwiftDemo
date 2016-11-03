@@ -19,7 +19,7 @@ class WLYArticleDetailCollectionViewController: WLYViewController, UICollectionV
     var currentIndex: Int = 0
     var articleIDs = Array<String>()
     
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
@@ -36,16 +36,16 @@ class WLYArticleDetailCollectionViewController: WLYViewController, UICollectionV
         self.bindAction()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.navigationController?.navigationBarHidden = true
+        self.navigationController?.isNavigationBarHidden = true
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        self.navigationController?.navigationBarHidden = false
+        self.navigationController?.isNavigationBarHidden = false
     }
     
     override func viewDidLayoutSubviews() {
@@ -58,44 +58,44 @@ class WLYArticleDetailCollectionViewController: WLYViewController, UICollectionV
         self.automaticallyAdjustsScrollViewInsets = false
         
         let collectionViewLayout = UICollectionViewFlowLayout()
-        self.collectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: collectionViewLayout)
+        self.collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: collectionViewLayout)
         self.view.addSubview(self.collectionView)
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
-        self.collectionView.scrollEnabled = false
-        self.collectionView.backgroundColor = UIColor.whiteColor()
-        self.collectionView.registerClass(WLYArticleDetailCell.self, forCellWithReuseIdentifier: WLYArticleDetailCell.identifier)
-        self.collectionView.snp_makeConstraints { (make) in
+        self.collectionView.isScrollEnabled = false
+        self.collectionView.backgroundColor = UIColor.white
+        self.collectionView.register(WLYArticleDetailCell.self, forCellWithReuseIdentifier: WLYArticleDetailCell.identifier)
+        self.collectionView.snp.makeConstraints { (make) in
             make.edges.equalTo(self.view)
         }
 
         self.toolBar = WLYArticleDetailToolBarView()
         self.view.addSubview(self.toolBar)
-        self.toolBar.snp_makeConstraints { (make) in
+        self.toolBar.snp.makeConstraints { (make) in
             make.left.right.bottom.equalTo(self.view)
             make.height.equalTo(ToolViewHeight)
         }
     }
     
     func bindAction() {
-        self.toolBar.backButton.addTarget(self, action: #selector(popViewController), forControlEvents: .TouchUpInside)
+        self.toolBar.backButton.addTarget(self, action: #selector(popViewController), for: .touchUpInside)
     }
     
-    func scrollCollectionViewToIndex(index: Int, animated: Bool) {
-        let indexPath = NSIndexPath(forRow: index, inSection: 0)
-        self.collectionView.scrollToItemAtIndexPath(indexPath, atScrollPosition: .Top, animated: animated)
+    func scrollCollectionViewToIndex(_ index: Int, animated: Bool) {
+        let indexPath = IndexPath(row: index, section: 0)
+        self.collectionView.scrollToItem(at: indexPath, at: .top, animated: animated)
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: self.view.wly_width, height: self.view.wly_height)
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.articleIDs.count
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell: WLYArticleDetailCell = collectionView.dequeueReusableCellWithReuseIdentifier(WLYArticleDetailCell.identifier, forIndexPath: indexPath) as! WLYArticleDetailCell
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell: WLYArticleDetailCell = collectionView.dequeueReusableCell(withReuseIdentifier: WLYArticleDetailCell.identifier, for: indexPath) as! WLYArticleDetailCell
         
         cell.indexPath = indexPath
         cell.articleID = self.articleIDs[indexPath.row]
@@ -111,7 +111,7 @@ class WLYArticleDetailCollectionViewController: WLYViewController, UICollectionV
         return cell
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
     }
     

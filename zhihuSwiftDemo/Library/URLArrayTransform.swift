@@ -10,16 +10,17 @@ import Foundation
 import ObjectMapper
 
 class URLArrayTransform: TransformType {
-    typealias Object = Array<NSURL>
+
+    typealias Object = Array<URL>
     typealias JSON = Array<AnyObject>
     
     init() {}
     
-    func transformFromJSON(value: AnyObject?) -> Array<NSURL>? {
+    public func transformFromJSON(_ value: Any?) -> Array<URL>? {
         if let URLStrings = value as? [String] {
-            var listOfUrls = [NSURL]()
+            var listOfUrls = [URL]()
             for item in URLStrings {
-                if let url = NSURL(string: item) {
+                if let url = URL(string: item) {
                     listOfUrls.append(url)
                 }
             }
@@ -28,13 +29,13 @@ class URLArrayTransform: TransformType {
         return nil
     }
     
-    func transformToJSON(value: [NSURL]?) -> JSON? {
+    func transformToJSON(_ value: [URL]?) -> JSON? {
         if let urls = value {
             var urlStrings = [String]()
             for url in urls {
                 urlStrings.append(url.absoluteString)
             }
-            return urlStrings
+            return urlStrings as URLArrayTransform.JSON?
         }
         
         return nil

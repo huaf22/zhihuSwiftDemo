@@ -53,20 +53,20 @@ class WLYArticleNavigationBar: UIView {
     }
     
     func setupView() {
-        self.backgroundColor = UIColor.clearColor()
+        self.backgroundColor = UIColor.clear
         
         self.backgroundView = UIView()
         self.addSubview(self.backgroundView)
         self.backgroundView.backgroundColor = UIColor(rgba: "#028fd6")
-        self.backgroundView.snp_makeConstraints { (make) in
+        self.backgroundView.snp.makeConstraints { (make) in
             make.edges.equalTo(self)
         }
         
-        self.leftButton = UIButton(type: .Custom)
+        self.leftButton = UIButton(type: .custom)
         self.addSubview(self.leftButton)
-        self.leftButton.setImage(UIImage.init(named: "Home_Icon_Menu_G"), forState: .Normal)
-        self.leftButton.setImage(UIImage.init(named: "Home_Icon_Menu_G_Highlight"), forState: .Highlighted)
-        self.leftButton.snp_makeConstraints { (make) in
+        self.leftButton.setImage(UIImage.init(named: "Home_Icon_Menu_G"), for: UIControlState())
+        self.leftButton.setImage(UIImage.init(named: "Home_Icon_Menu_G_Highlight"), for: .highlighted)
+        self.leftButton.snp.makeConstraints { (make) in
             make.bottom.equalTo(self)
             make.left.equalTo(self)
             make.height.equalTo(ButtonHeight)
@@ -76,8 +76,8 @@ class WLYArticleNavigationBar: UIView {
         self.titleLabel = UILabel()
         self.addSubview(self.titleLabel)
         self.titleLabel.text = "今日新闻"
-        self.titleLabel.textColor = UIColor.whiteColor()
-        self.titleLabel.snp_makeConstraints { (make) in
+        self.titleLabel.textColor = UIColor.white
+        self.titleLabel.snp.makeConstraints { (make) in
             make.bottom.equalTo(self)
             make.centerX.equalTo(self)
             make.height.equalTo(ButtonHeight)
@@ -87,7 +87,7 @@ class WLYArticleNavigationBar: UIView {
 //        self.addSubview(self.rightButton)
 //        self.rightButton.setImage(UIImage.init(named: "Dark_Management_Add"), forState: .Normal)
 //        self.rightButton.setImage(UIImage.init(named: "Dark_Management_Add"), forState: .Highlighted)
-//        self.rightButton.snp_makeConstraints { (make) in
+//        self.rightButton.snp.makeConstraints { (make) in
 //            make.bottom.equalTo(self)
 //            make.right.equalTo(self)
 //            make.height.equalTo(ButtonHeight)
@@ -95,16 +95,16 @@ class WLYArticleNavigationBar: UIView {
 //        }
         
         self.refreshImageView = WLYRefreshLoadingView()
-        self.refreshImageView.backgroundColor = UIColor.clearColor()
+        self.refreshImageView.backgroundColor = UIColor.clear
         self.addSubview(self.refreshImageView)
-        self.refreshImageView.snp_makeConstraints { (make) in
+        self.refreshImageView.snp.makeConstraints { (make) in
             make.height.width.equalTo(ButtonHeight)
             make.bottom.equalTo(self)
-            make.right.equalTo(self.titleLabel.snp_left).offset(-5)
+            make.right.equalTo(self.titleLabel.snp.left).offset(-5)
         }
     }
     
-    func showPullProgress(ratio: CGFloat) {
+    func showPullProgress(_ ratio: CGFloat) {
         print("WLYArticleNavigationBar showPullProgress")
         self.refreshImageView.showPullProgress(ratio)
     }

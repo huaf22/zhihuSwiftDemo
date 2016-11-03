@@ -36,15 +36,15 @@ class WLYRefreshLoadingView: UIView {
     func setupView() {
         self.loadingView = UIActivityIndicatorView()
         self.addSubview(self.loadingView)
-        self.loadingView.snp_makeConstraints { (make) in
+        self.loadingView.snp.makeConstraints { (make) in
             make.edges.equalTo(self)
         }
         
-        self.loadingView.hidden = true
+        self.loadingView.isHidden = true
     }
     
-    override func drawRect(rect: CGRect) {
-        super.drawRect(rect)
+    override func draw(_ rect: CGRect) {
+        super.draw(rect)
         
         if shouldShowPath {
             WLYLog.i("drawRect endAngle: \(self.endAngle)")
@@ -54,15 +54,15 @@ class WLYRefreshLoadingView: UIView {
                                     startAngle: degressToRadians(0),
                                     endAngle: degressToRadians(self.endAngle),
                                     clockwise: true)
-            UIColor.whiteColor().setStroke()
+            UIColor.white.setStroke()
             path.lineWidth = 2
             path.stroke()
         }
     }
     
-    func showPullProgress(ratio: CGFloat) {
+    func showPullProgress(_ ratio: CGFloat) {
         if ratio >= 0 && ratio <= 100 {
-            self.loadingView.hidden = true
+            self.loadingView.isHidden = true
             self.shouldShowPath = true
             self.endAngle = ratio * 360
             
@@ -71,7 +71,7 @@ class WLYRefreshLoadingView: UIView {
     }
     
     func startLoading() {
-        self.loadingView.hidden = false
+        self.loadingView.isHidden = false
         self.shouldShowPath = false
         
         self.loadingView.startAnimating()
@@ -81,10 +81,10 @@ class WLYRefreshLoadingView: UIView {
     
     func stopLoading() {
         self.loadingView.stopAnimating()
-        self.loadingView.hidden = true
+        self.loadingView.isHidden = true
     }
     
-    func degressToRadians(angle: CGFloat) -> CGFloat {
+    func degressToRadians(_ angle: CGFloat) -> CGFloat {
         return CGFloat(((angle) / 180.0 * CGFloat(M_PI)))
     }
 }

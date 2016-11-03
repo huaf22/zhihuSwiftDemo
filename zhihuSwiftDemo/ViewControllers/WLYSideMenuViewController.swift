@@ -24,7 +24,7 @@ class WLYSideMenuViewController: WLYViewController, UIScrollViewDelegate, UIGest
         super.init(coder: aDecoder)
     }
     
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
@@ -46,10 +46,10 @@ class WLYSideMenuViewController: WLYViewController, UIScrollViewDelegate, UIGest
         self.bindObserver()
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        self.scrollView.setContentOffset(CGPointMake(0.5 * self.scrollView.wly_width, 0), animated: false)
+        self.scrollView.setContentOffset(CGPoint(x: 0.5 * self.scrollView.wly_width, y: 0), animated: false)
     }
     
     func setupView() {
@@ -60,20 +60,20 @@ class WLYSideMenuViewController: WLYViewController, UIScrollViewDelegate, UIGest
         self.scrollView.delegate = self
         self.scrollView.showsVerticalScrollIndicator = false
         self.scrollView.showsHorizontalScrollIndicator = false
-        self.scrollView.pagingEnabled = true
+        self.scrollView.isPagingEnabled = true
         self.scrollView.bounces = false
-        self.scrollView.snp_makeConstraints { (make) in
+        self.scrollView.snp.makeConstraints { (make) in
             make.edges.equalTo(self.view)
         }
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(scrollToMainView))
         tapRecognizer.delegate = self
         self.scrollView.addGestureRecognizer(tapRecognizer)
         
-        self.scrollView.contentSize = CGSizeMake(self.view.wly_width * 1.5, self.view.wly_height)
+        self.scrollView.contentSize = CGSize(width: self.view.wly_width * 1.5, height: self.view.wly_height)
         
         self.scrollContentView = UIView()
         self.scrollView.addSubview( self.scrollContentView)
-        self.scrollContentView.snp_makeConstraints { (make) in
+        self.scrollContentView.snp.makeConstraints { (make) in
             make.left.top.equalTo(self.scrollView)
             make.height.equalTo(self.scrollView)
             make.width.equalTo(self.scrollView).multipliedBy(1.5)
@@ -81,7 +81,7 @@ class WLYSideMenuViewController: WLYViewController, UIScrollViewDelegate, UIGest
         
         self.addChildViewController(self.leftViewController)
         self.scrollContentView.addSubview(self.leftViewController.view)
-        self.leftViewController.view.snp_makeConstraints { (make) in
+        self.leftViewController.view.snp.makeConstraints { (make) in
             make.left.top.bottom.equalTo( self.scrollContentView)
             make.width.equalTo(self.scrollContentView).dividedBy(3)
         }
@@ -89,42 +89,42 @@ class WLYSideMenuViewController: WLYViewController, UIScrollViewDelegate, UIGest
         self.addMainViewController(self.mainViewController)
     }
     
-    func addMainViewController(vc: UIViewController) {
+    func addMainViewController(_ vc: UIViewController) {
         self.addChildViewController(vc)
         self.scrollContentView.addSubview(vc.view)
-        vc.view.snp_remakeConstraints { (make) in
+        vc.view.snp.remakeConstraints { (make) in
             make.top.bottom.right.equalTo(self.scrollContentView)
             make.width.equalTo(self.scrollContentView).multipliedBy(2/3.0)
         }
     }
     
     func bindObserver() {
-        NSNotificationCenter.defaultCenter().addObserver(self,
+        NotificationCenter.default.addObserver(self,
                                                          selector: #selector(scrollToLeftView),
-                                                         name: WLYSideMenuViewController.WLYNoticationNameShowMenuView,
+                                                         name: NSNotification.Name(rawValue: WLYSideMenuViewController.WLYNoticationNameShowMenuView),
                                                          object: nil)
         
-        NSNotificationCenter.defaultCenter().addObserver(self,
+        NotificationCenter.default.addObserver(self,
                                                          selector: #selector(scrollToMainView),
-                                                         name: WLYSideMenuViewController.WLYNoticationNameHideMenuView,
+                                                         name: NSNotification.Name(rawValue: WLYSideMenuViewController.WLYNoticationNameHideMenuView),
                                                          object: nil)
     }
     
     func removeObserver() {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
     func scrollToLeftView() {
-        self.scrollView.setContentOffset(CGPointZero, animated: true)
+        self.scrollView.setContentOffset(CGPoint.zero, animated: true)
     }
     
     func scrollToMainView() {
-        self.scrollView.setContentOffset(CGPointMake(0.5 * self.scrollView.wly_width, 0), animated: true)
+        self.scrollView.setContentOffset(CGPoint(x: 0.5 * self.scrollView.wly_width, y: 0), animated: true)
     }
     
 
     
-    func showViewController(vc: UIViewController) {
+    func showViewController(_ vc: UIViewController) {
         if self.mainViewController != nil {
             if vc == self.mainViewController {
                 return
@@ -138,8 +138,8 @@ class WLYSideMenuViewController: WLYViewController, UIScrollViewDelegate, UIGest
         self.mainViewController = vc
     }
     
-    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
-        let shouldReceiveTouch = self.scrollView.contentOffset.x == 0 && (touch.locationInView(self.scrollView).x >= self.scrollView.wly_width / 2)
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        let shouldReceiveTouch = self.scrollView.contentOffset.x == 0 && (touch.location(in: self.scrollView).x >= self.scrollView.wly_width / 2)
         WLYLog.d("shouldReceiveTouch: \(shouldReceiveTouch)")
         return shouldReceiveTouch
     }

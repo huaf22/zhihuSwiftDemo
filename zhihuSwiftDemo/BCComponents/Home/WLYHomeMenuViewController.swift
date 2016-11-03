@@ -35,16 +35,16 @@ class WLYHomeMenuViewController: WLYViewController, UITableViewDelegate, UITable
         
         self.headerView = HomeSideMenuHeaderView()
         self.view.addSubview(self.headerView)
-        self.headerView.backgroundColor = UIColor.clearColor()
-        self.headerView.snp_makeConstraints { (make) in
+        self.headerView.backgroundColor = UIColor.clear
+        self.headerView.snp.makeConstraints { (make) in
             make.left.right.top.equalTo(self.view)
             make.height.equalTo(HeaderViewHeight)
         }
         
         self.footerView = HomeSideMenuFooterView()
         self.view.addSubview(self.footerView)
-        self.footerView.backgroundColor = UIColor.clearColor()
-        self.footerView.snp_makeConstraints { (make) in
+        self.footerView.backgroundColor = UIColor.clear
+        self.footerView.snp.makeConstraints { (make) in
             make.left.right.bottom.equalTo(self.view)
             make.height.equalTo(FooterViewHeight)
         }
@@ -57,21 +57,21 @@ class WLYHomeMenuViewController: WLYViewController, UITableViewDelegate, UITable
         self.tableView.showsHorizontalScrollIndicator = false
         self.tableView.showsVerticalScrollIndicator = false
         self.tableView.separatorColor = UIColor(rgba: "#1b2329")
-        self.tableView.separatorStyle = .SingleLine
-        self.tableView.registerClass(WLYTableViewCell.self, forCellReuseIdentifier:WLYTableViewCell.identifier)
-        self.tableView.snp_makeConstraints { (make) in
-            make.top.equalTo(self.headerView.snp_bottom)
-            make.bottom.equalTo(self.footerView.snp_top)
+        self.tableView.separatorStyle = .singleLine
+        self.tableView.register(WLYTableViewCell.self, forCellReuseIdentifier:WLYTableViewCell.identifier)
+        self.tableView.snp.makeConstraints { (make) in
+            make.top.equalTo(self.headerView.snp.bottom)
+            make.bottom.equalTo(self.footerView.snp.top)
             make.left.right.equalTo(self.view)
         }
     }
     
     func loadData() {
-        ArticleService.requestArticleThemes() { (themeResult: WLYArticleThemeResult?, error: NSError?) in
+        ArticleService.requestArticleThemes() { (themeResult: WLYArticleThemeResult?, error: Error?) in
             if error == nil && themeResult != nil {
                 if let array = themeResult?.themes {
                     self.themeArray = array
-                    self.themeArray?.insert(self.homePageTheme(), atIndex: 0)
+                    self.themeArray?.insert(self.homePageTheme(), at: 0)
                     
                     self.tableView.reloadData()
                 }
@@ -89,15 +89,15 @@ class WLYHomeMenuViewController: WLYViewController, UITableViewDelegate, UITable
         return  theme
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let count = self.themeArray?.count ?? 0
         return count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(WLYTableViewCell.identifier)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: WLYTableViewCell.identifier)
         
-        cell?.selectionStyle = .None
+        cell?.selectionStyle = .none
         cell?.backgroundColor = UIColor.wly_backgroundColor
         cell?.textLabel?.textColor = UIColor.wly_darkTextColor
         cell?.textLabel?.text = self.themeArray?[indexPath.row].name ?? ""
@@ -105,8 +105,8 @@ class WLYHomeMenuViewController: WLYViewController, UITableViewDelegate, UITable
         return cell!
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if let parentVC = self.parentViewController as? WLYSideMenuViewController {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let parentVC = self.parent as? WLYSideMenuViewController {
             if indexPath.row == 0 {
                 parentVC.showViewController(self.articleListVC!)
             } else {

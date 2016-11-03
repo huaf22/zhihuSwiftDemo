@@ -23,12 +23,12 @@ class WLYVerticalLayoutButton: UIButton {
         
         if self.imageView != nil && self.titleLabel != nil {
             let imageHW: CGFloat = min((self.imageView?.wly_width)!, (self.imageView?.wly_height)!)
-            self.imageView?.frame = CGRectMake(0, 0, imageHW, imageHW)
-            self.imageView?.center = CGPointMake(self.wly_width / 2, imageHW / 2)
+            self.imageView?.frame = CGRect(x: 0, y: 0, width: imageHW, height: imageHW)
+            self.imageView?.center = CGPoint(x: self.wly_width / 2, y: imageHW / 2)
             
             let titleLabelY = self.wly_height - (self.titleLabel?.wly_height)!
-            self.titleLabel?.frame = CGRectMake(0, titleLabelY, self.wly_width, (self.titleLabel?.wly_height)!)
-            self.titleLabel?.textAlignment = .Center
+            self.titleLabel?.frame = CGRect(x: 0, y: titleLabelY, width: self.wly_width, height: (self.titleLabel?.wly_height)!)
+            self.titleLabel?.textAlignment = .center
         }
     }
 }

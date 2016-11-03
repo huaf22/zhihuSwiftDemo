@@ -18,6 +18,6 @@ class WLYTableViewCell: UITableViewCell {
     }
     
     static var identifier: String {
-        return NSStringFromClass(WLYTableViewCell)
+        return NSStringFromClass(WLYTableViewCell.self)
     }
 }
