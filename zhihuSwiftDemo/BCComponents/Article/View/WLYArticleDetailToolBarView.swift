@@ -28,41 +28,41 @@ class WLYArticleDetailToolBarView: UIView {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
     }
     
     func setupView() {
-        self.backgroundColor = UIColor.whiteColor()
+        self.backgroundColor = UIColor.white
 
-        self.backButton = UIButton(type: .Custom)
-        self.backButton.setImage(UIImage(named: "News_Navigation_Arrow"), forState: .Normal)
-        self.backButton.setImage(UIImage(named: "News_Navigation_Arrow_Highlight"), forState: .Highlighted)
+        self.backButton = UIButton(type: .custom)
+        self.backButton.setImage(UIImage(named: "News_Navigation_Arrow"), for: UIControlState())
+        self.backButton.setImage(UIImage(named: "News_Navigation_Arrow_Highlight"), for: .highlighted)
         
-        self.nextButton = UIButton(type: .Custom)
-        self.nextButton.setImage(UIImage(named: "News_Navigation_Next"), forState: .Normal)
-        self.nextButton.setImage(UIImage(named: "News_Navigation_Next_Highlight"), forState: .Highlighted)
+        self.nextButton = UIButton(type: .custom)
+        self.nextButton.setImage(UIImage(named: "News_Navigation_Next"), for: UIControlState())
+        self.nextButton.setImage(UIImage(named: "News_Navigation_Next_Highlight"), for: .highlighted)
         
-        self.likeButton = UIButton(type: .Custom)
-        self.likeButton.setImage(UIImage(named: "News_Navigation_Vote"), forState: .Normal)
-        self.likeButton.setImage(UIImage(named: "News_Navigation_Voted"), forState: .Highlighted)
+        self.likeButton = UIButton(type: .custom)
+        self.likeButton.setImage(UIImage(named: "News_Navigation_Vote"), for: UIControlState())
+        self.likeButton.setImage(UIImage(named: "News_Navigation_Voted"), for: .highlighted)
         
-        self.shareButton = UIButton(type: .Custom)
-        self.shareButton.setImage(UIImage(named: "News_Navigation_Share"), forState: .Normal)
-        self.shareButton.setImage(UIImage(named: "News_Navigation_Share_Highlight"), forState: .Highlighted)
+        self.shareButton = UIButton(type: .custom)
+        self.shareButton.setImage(UIImage(named: "News_Navigation_Share"), for: UIControlState())
+        self.shareButton.setImage(UIImage(named: "News_Navigation_Share_Highlight"), for: .highlighted)
         
-        self.commentButton = UIButton(type: .Custom)
-        self.commentButton.setImage(UIImage(named: "News_Navigation_Comment"), forState: .Normal)
-        self.commentButton.setImage(UIImage(named: "News_Navigation_Comment_Highlight"), forState: .Highlighted)
+        self.commentButton = UIButton(type: .custom)
+        self.commentButton.setImage(UIImage(named: "News_Navigation_Comment"), for: UIControlState())
+        self.commentButton.setImage(UIImage(named: "News_Navigation_Comment_Highlight"), for: .highlighted)
         
         self.buttonArray = [self.backButton, self.nextButton, self.likeButton, self.shareButton, self.commentButton]
         
         for index in 0..<self.buttonArray.count {
             let button = self.buttonArray[index]
             self.addSubview(button)
-            button.imageView?.contentMode = .ScaleAspectFit
+            button.imageView?.contentMode = .scaleAspectFit
             
-            let offsetX: CGFloat = UIScreen.mainScreen().bounds.width / CGFloat(self.buttonArray.count + 1) * (CGFloat(index) + 1) - ButtonWidth / 2
-            button.snp_makeConstraints(closure: { (make) in
+            let offsetX: CGFloat = UIScreen.main.bounds.width / CGFloat(self.buttonArray.count + 1) * (CGFloat(index) + 1) - ButtonWidth / 2
+            button.snp.makeConstraints({ (make) in
                 make.top.bottom.equalTo(self)
                 make.width.equalTo(50)
                 make.left.equalTo(self).offset(offsetX)

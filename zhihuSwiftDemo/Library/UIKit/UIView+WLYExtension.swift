@@ -19,7 +19,7 @@ extension UIView {
     }
     
     var wly_center: CGPoint {
-        return CGPointMake(self.wly_width / 2, self.wly_height / 2)
+        return CGPoint(x: self.wly_width / 2, y: self.wly_height / 2)
     }
     
     var wly_y: CGFloat {

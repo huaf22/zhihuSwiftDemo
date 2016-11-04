@@ -12,13 +12,13 @@ class WLYArticleCacheService {
     
     static var CachedArticleDict = Dictionary<String, Array<WLYArticle>>()     // time: [WLYArticle]
     
-    static func cacheDailyArticle(dailyArticle: WLYDailyArticle) {
+    static func cacheDailyArticle(_ dailyArticle: WLYDailyArticle) {
         WLYLog.i(dailyArticle.date!)
         
         WLYArticleCacheService.CachedArticleDict.updateValue(dailyArticle.articles!, forKey: dailyArticle.date!)
     }
     
-    static func fetchDailyArticles(date: String) -> Array<WLYArticle>? {
+    static func fetchDailyArticles(_ date: String) -> Array<WLYArticle>? {
         WLYLog.i(date)
         
         return  WLYArticleCacheService.CachedArticleDict[date]
@@ -28,17 +28,17 @@ class WLYArticleCacheService {
     
     static var CacheArticleDetailDict = Dictionary<String, WLYArticleDetail>() // articleID: articleDetail
     
-    static func cacheArticleDetail(detail: WLYArticleDetail) {
+    static func cacheArticleDetail(_ detail: WLYArticleDetail) {
         WLYLog.i("\(detail.id)")
         
         WLYArticleCacheService.CacheArticleDetailDict.updateValue(detail, forKey: "\(detail.id)")
     }
     
-    static func isArticleDetailCached(id: String) -> Bool {
+    static func isArticleDetailCached(_ id: String) -> Bool {
         return (WLYArticleCacheService.CacheArticleDetailDict[id] != nil)
     }
     
-    static func fetchArticleDetail(id: String) -> WLYArticleDetail? {
+    static func fetchArticleDetail(_ id: String) -> WLYArticleDetail? {
         return WLYArticleCacheService.CacheArticleDetailDict[id]
     }
 }

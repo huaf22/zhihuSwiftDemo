@@ -9,7 +9,7 @@
 import Foundation
 
 class ArticleHTMLParser {
-    static func parseHTML(article: WLYArticleDetail) -> String? {
+    static func parseHTML(_ article: WLYArticleDetail) -> String? {
         if let body = article.body {
             if let cssUrl = article.cssArray?[0] {
                 let htmlString = "<html><body><link href=\"\(cssUrl)\" rel=\"stylesheet\" type=\"text/css\"/>\(body)</body><html>"

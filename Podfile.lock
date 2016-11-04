@@ -1,26 +1,30 @@
 PODS:
-  - Alamofire (3.4.1)
-  - AlamofireObjectMapper (3.0.2):
-    - Alamofire (~> 3.2)
-    - ObjectMapper (~> 1.0)
-  - Kingfisher (2.4.2)
-  - ObjectMapper (1.4.0)
-  - SnapKit (0.15.0)
-  - XCGLogger (3.3)
+  - Alamofire (4.0.1)
+  - AlamofireObjectMapper (4.0.0):
+    - Alamofire (~> 4.0)
+    - ObjectMapper (~> 2.0)
+  - Kingfisher (3.1.4)
+  - ObjectMapper (2.1.0)
+  - SnapKit (3.0.2)
+  - XCGLogger (4.0.0):
+    - XCGLogger/Core (= 4.0.0)
+  - XCGLogger/Core (4.0.0)
 
 DEPENDENCIES:
-  - Alamofire (~> 3.4)
-  - AlamofireObjectMapper (~> 3.0)
-  - Kingfisher (~> 2.4)
-  - SnapKit (~> 0.15.0)
-  - XCGLogger (~> 3.3)
+  - Alamofire (~> 4.0)
+  - AlamofireObjectMapper (~> 4.0)
+  - Kingfisher (>= 3.0)
+  - SnapKit (~> 3.0.2)
+  - XCGLogger (~> 4.0.0)
 
 SPEC CHECKSUMS:
-  Alamofire: 01a82e2f6c0f860ade35534c8dd88be61bdef40c
-  AlamofireObjectMapper: 70f97cbf45c01c48d26aa07a1a7059a60ed7411d
-  Kingfisher: 05bf8d04408aaa70fcd2c8c81b9f1d0f1ad313dd
-  ObjectMapper: a07ad0462c5adf014adc0f89ef04c29b626e855e
-  SnapKit: 4962eed2ee18e48cbd2b2292fffc57efe7235f87
-  XCGLogger: d6e196e78940ff6daab17d6917107876f973fa31
+  Alamofire: 7682d43245de14874acd142ec137b144aa1dd335
+  AlamofireObjectMapper: 9faa3ce5a240efda1b209009a2d6e1e949227abc
+  Kingfisher: 6c67e3e57f2d81a9cfdfa25052cd86f33ceac9bb
+  ObjectMapper: e5e0f8aef8590fc2ddcde7f27eddb255863ee6e9
+  SnapKit: 2e456761aa92d4d4067a7a5594c18769d451a8ad
+  XCGLogger: 38063ea89b4c8b23232d18efd2e12eb0005f3ea4
 
-COCOAPODS: 0.39.0
+PODFILE CHECKSUM: 839910a75d10f81043e41252cb06ec40cc58e93b
+
+COCOAPODS: 1.1.1

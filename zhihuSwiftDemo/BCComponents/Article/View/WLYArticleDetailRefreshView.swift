@@ -11,32 +11,32 @@ import UIKit
 
 class WLYArticleDetailRefreshView: WLYPullToRefreshView {
 
-    private var backgroundView: UIView!
-    private var arrow: UIImageView!
-    private var indicator: UIActivityIndicatorView!
+    fileprivate var backgroundView: UIView!
+    fileprivate var arrow: UIImageView!
+    fileprivate var indicator: UIActivityIndicatorView!
 
 //    private var scrollViewInsets: UIEdgeInsets = UIEdgeInsetsZero
 
     // MARK: UIView
 
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
     }
     
-    override init(frame: CGRect, down:Bool=true, refreshCompletion :(Void -> Void)?) {
+    override init(frame: CGRect, down:Bool=true, refreshCompletion :((Void) -> Void)?) {
         super.init(frame: frame, down:down, refreshCompletion: refreshCompletion)
         
         self.refreshCompletion = refreshCompletion
         
-        self.backgroundView = UIView(frame: CGRectMake(0, 0, frame.size.width, frame.size.height))
-        self.backgroundView.backgroundColor = UIColor.clearColor()
-        self.backgroundView.autoresizingMask = UIViewAutoresizing.FlexibleWidth
+        self.backgroundView = UIView(frame: CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height))
+        self.backgroundView.backgroundColor = UIColor.clear
+        self.backgroundView.autoresizingMask = UIViewAutoresizing.flexibleWidth
         
-        self.arrow = UIImageView(frame: CGRectMake(0, 0, 30, 30))
-        self.arrow.autoresizingMask = [.FlexibleLeftMargin, .FlexibleRightMargin]
+        self.arrow = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+        self.arrow.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin]
         self.arrow.image = UIImage(named: "ZHAnswerViewBack")
         
-        self.indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+        self.indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
         self.indicator.bounds = self.arrow.bounds
         self.indicator.autoresizingMask = self.arrow.autoresizingMask
         self.indicator.hidesWhenStopped = true
@@ -49,46 +49,46 @@ class WLYArticleDetailRefreshView: WLYPullToRefreshView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        self.arrow.center = CGPointMake(self.frame.size.width / 2, self.frame.size.height / 2)
-        self.arrow.frame = CGRectOffset(arrow.frame, 0, 0)
+        self.arrow.center = CGPoint(x: self.frame.size.width / 2, y: self.frame.size.height / 2)
+        self.arrow.frame = arrow.frame.offsetBy(dx: 0, dy: 0)
         self.indicator.center = self.arrow.center
     }
 
     //MARK: Override Methods
     
-    override func startPullAction(scrollView: UIScrollView) {
+    override func startPullAction(_ scrollView: UIScrollView) {
         super.startPullAction(scrollView)
         
-        UIView.animateWithDuration(0.2) {
-            self.arrow.transform = CGAffineTransformIdentity
-        }
+        UIView.animate(withDuration: 0.2, animations: {
+            self.arrow.transform = CGAffineTransform.identity
+        }) 
     }
   
-    override func startPullTriggeredAction(scrollView: UIScrollView) {
+    override func startPullTriggeredAction(_ scrollView: UIScrollView) {
         super.startPullTriggeredAction(scrollView)
         
-        UIView.animateWithDuration(0.2,
+        UIView.animate(withDuration: 0.2,
                                    delay: 0,
                                    options:[],
                                    animations: {
                                         // -0.0000001 for the rotation direction control
-                                        self.arrow.transform = CGAffineTransformMakeRotation(CGFloat(M_PI-0.0000001))
+                                        self.arrow.transform = CGAffineTransform(rotationAngle: CGFloat(M_PI-0.0000001))
                                     },
                                    completion:nil)
     }
     
 
-    override func startRefreshAction(scrollView: UIScrollView) {
+    override func startRefreshAction(_ scrollView: UIScrollView) {
         super.startRefreshAction(scrollView)
         
         self.indicator.stopAnimating()
-        self.arrow.hidden = false
+        self.arrow.isHidden = false
     }
     
   
-    override func stopRefreshAction(scrollView: UIScrollView) {
+    override func stopRefreshAction(_ scrollView: UIScrollView) {
         super.stopRefreshAction(scrollView)
         
-        self.arrow.transform = CGAffineTransformIdentity
+        self.arrow.transform = CGAffineTransform.identity
     }
 }

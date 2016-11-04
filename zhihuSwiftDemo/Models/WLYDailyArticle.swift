@@ -14,7 +14,7 @@ class WLYDailyArticle: Mappable {
     var articles: Array<WLYArticle>?
     
     
-    required init?(_ map: Map){
+    required init?(map: Map){
         
     }
     

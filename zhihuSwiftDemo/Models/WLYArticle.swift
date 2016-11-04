@@ -10,13 +10,13 @@ import Foundation
 import ObjectMapper
 
 class WLYArticle: Mappable {
-    var imageURLs: Array<NSURL>?
+    var imageURLs: Array<URL>?
     var type: Int?
     var id: Int?
     var gaPrefix: String?
     var title: String?
     
-    required init?(_ map: Map){
+    required init?(map: Map){
         
     }
     

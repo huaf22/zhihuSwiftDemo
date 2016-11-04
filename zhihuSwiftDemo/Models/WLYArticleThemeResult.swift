@@ -14,7 +14,7 @@ class WLYArticleThemeResult: Mappable {
     var subscribed: Array<String>?
     var themes: Array<WLYArticleTheme>?
     
-    required init?(_ map: Map){
+    required init?(map: Map){
         
     }
     
