@@ -1,10 +1,13 @@
 PODS:
-  - Alamofire (4.0.1)
-  - AlamofireObjectMapper (4.0.0):
-    - Alamofire (~> 4.0)
+  - Alamofire (4.2.0)
+  - AlamofireObjectMapper (4.0.1):
+    - Alamofire (~> 4.1)
     - ObjectMapper (~> 2.0)
-  - Kingfisher (3.1.4)
-  - ObjectMapper (2.1.0)
+  - Kingfisher (3.2.2)
+  - ObjectMapper (2.2.2)
+  - RxCocoa (3.0.1):
+    - RxSwift (~> 3.0)
+  - RxSwift (3.0.1)
   - SnapKit (3.0.2)
   - XCGLogger (4.0.0):
     - XCGLogger/Core (= 4.0.0)
@@ -14,17 +17,21 @@ DEPENDENCIES:
   - Alamofire (~> 4.0)
   - AlamofireObjectMapper (~> 4.0)
   - Kingfisher (>= 3.0)
+  - RxCocoa (~> 3.0)
+  - RxSwift (~> 3.0)
   - SnapKit (~> 3.0.2)
   - XCGLogger (~> 4.0.0)
 
 SPEC CHECKSUMS:
-  Alamofire: 7682d43245de14874acd142ec137b144aa1dd335
-  AlamofireObjectMapper: 9faa3ce5a240efda1b209009a2d6e1e949227abc
-  Kingfisher: 6c67e3e57f2d81a9cfdfa25052cd86f33ceac9bb
-  ObjectMapper: e5e0f8aef8590fc2ddcde7f27eddb255863ee6e9
+  Alamofire: aa2e09d871c9160ac53c90e83c68064a94e3dfbe
+  AlamofireObjectMapper: 842d2eed43a4d0593ff0110d54ac86a170c4519c
+  Kingfisher: 821466474ad7ffc375a4aecadfa05068cfed67b3
+  ObjectMapper: 9e385c2295bcc4e16eabbcfc85db801442bba545
+  RxCocoa: 15a52fc590dcc700cb4a690a633b5c5184ce3a78
+  RxSwift: af5680055c4ad04480189c52d28385b1029493a6
   SnapKit: 2e456761aa92d4d4067a7a5594c18769d451a8ad
   XCGLogger: 38063ea89b4c8b23232d18efd2e12eb0005f3ea4
 
-PODFILE CHECKSUM: 839910a75d10f81043e41252cb06ec40cc58e93b
+PODFILE CHECKSUM: 2e4527c719e2ebdda33970930bb4c5518ef5e766
 
 COCOAPODS: 1.1.1

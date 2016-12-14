@@ -8,12 +8,14 @@
 
 import UIKit
 import SnapKit
+import RxSwift
 
 class WLYArticleListViewController: WLYTableViewController, UITableViewDataSource {
 
     let BarViewHeight: CGFloat = 58
     let TableCellHeight: CGFloat = 95
     let PosterImageViewHeight: CGFloat = 200
+    let disposeBag = DisposeBag()
     
     var customBar: WLYArticleNavigationBar!
     var scrollImageView: WLYScrollImageView!
@@ -68,29 +70,22 @@ class WLYArticleListViewController: WLYTableViewController, UITableViewDataSourc
     }
     
     func loadData() {
-        ArticleService.requestLatestArticles { (dailyArticle: WLYDailyArticle?, error: Error?) in
-            if error == nil {
-                self.articles = dailyArticle?.articles
-                
+        ArticleService.requestLatestArticles().subscribe(
+            onNext:{ [weak self] in
+                self?.articles = $0.articles
                 var imageURLs = Array<URL>()
-                for article in (dailyArticle?.articles)! {
+                for article in ($0.articles)! {
                     if let imageURL = article.imageURLs?[0] {
                         imageURLs.append(imageURL as URL)
                     }
                 }
                 
-                self.scrollImageView.imageURLs = imageURLs as Array<URL>?
-            } else {
-                
-            }
-//            self.scrollViewDidStopRefresh()
-            
-            let time = DispatchTime.now() + Double((Int64)(3 * NSEC_PER_SEC)) / Double(NSEC_PER_SEC)
-            DispatchQueue.main.asyncAfter(deadline: time) {
-                self.scrollViewDidStopRefresh()
-            }
-        }
-       
+                self?.scrollImageView.imageURLs = imageURLs as Array<URL>?
+            },
+            onError:{
+                print($0)
+            })
+            .addDisposableTo(disposeBag)
     }
     
     func setupView() {

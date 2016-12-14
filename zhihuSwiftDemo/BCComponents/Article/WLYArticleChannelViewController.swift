@@ -8,11 +8,13 @@
 
 import UIKit
 import SnapKit
+import RxSwift
 
 class WLYArticleChannelViewController: WLYTableViewController, UITableViewDataSource {
     
     let BarViewHeight: CGFloat = 58
     let TableCellHeight: CGFloat = 95
+    let disposeBag = DisposeBag()
     
     var customBar: WLYArticleNavigationBar!
     var posterImageView: UIImageView!
@@ -74,22 +76,18 @@ class WLYArticleChannelViewController: WLYTableViewController, UITableViewDataSo
     }
     
     func loadData() {
-        ArticleService.requestArticleThemes { (result, error) in
-            
-        }
-        
-        ArticleService.requestThemeArticlesWithID((theme?.id)!) { (themeArticles, error) in
-            if error == nil {
-                self.articles = themeArticles?.articles
-                self.customBar.title = themeArticles?.name
-                self.posterImageView.kf.setImage(with:themeArticles?.ImageURL)
-                self.tableView.reloadData()
-            } else {
-
-                // handle error result
-            }
-            self.scrollViewDidStopRefresh()
-        }
+        ArticleService.requestThemeArticlesWithID((theme?.id)!).subscribe(
+            onNext:{ [weak self] in
+                if let articles = $0.articles {
+                    self?.articles = articles
+                    self?.customBar.title = $0.name
+                    self?.posterImageView.kf.setImage(with:$0.ImageURL)
+                    self?.tableView.reloadData()
+                }
+            },
+            onError:{ print($0) },
+            onDisposed: { self.scrollViewDidStopRefresh() })
+            .addDisposableTo(disposeBag)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

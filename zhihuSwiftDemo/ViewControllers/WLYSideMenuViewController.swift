@@ -100,14 +100,14 @@ class WLYSideMenuViewController: WLYViewController, UIScrollViewDelegate, UIGest
     
     func bindObserver() {
         NotificationCenter.default.addObserver(self,
-                                                         selector: #selector(scrollToLeftView),
-                                                         name: NSNotification.Name(rawValue: WLYSideMenuViewController.WLYNoticationNameShowMenuView),
-                                                         object: nil)
+                                               selector: #selector(scrollToLeftView),
+                                               name: NSNotification.Name(rawValue: WLYSideMenuViewController.WLYNoticationNameShowMenuView),
+                                               object: nil)
         
         NotificationCenter.default.addObserver(self,
-                                                         selector: #selector(scrollToMainView),
-                                                         name: NSNotification.Name(rawValue: WLYSideMenuViewController.WLYNoticationNameHideMenuView),
-                                                         object: nil)
+                                               selector: #selector(scrollToMainView),
+                                               name: NSNotification.Name(rawValue: WLYSideMenuViewController.WLYNoticationNameHideMenuView),
+                                               object: nil)
     }
     
     func removeObserver() {
@@ -121,8 +121,6 @@ class WLYSideMenuViewController: WLYViewController, UIScrollViewDelegate, UIGest
     func scrollToMainView() {
         self.scrollView.setContentOffset(CGPoint(x: 0.5 * self.scrollView.wly_width, y: 0), animated: true)
     }
-    
-
     
     func showViewController(_ vc: UIViewController) {
         if self.mainViewController != nil {
