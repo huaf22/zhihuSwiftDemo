@@ -10,6 +10,8 @@ import Foundation
 import UIKit
 
 class WLYTableViewController: WLYViewController, UITableViewDelegate {
+    let DefaultTriggerRefreshHeigh: CGFloat = 50.0;
+    
     enum PullToRefreshState {
         case pulling
         case triggered
@@ -18,12 +20,9 @@ class WLYTableViewController: WLYViewController, UITableViewDelegate {
     }
     
     var tableView: UITableView!
-    
-    var triggerRefreshHeigh: CGFloat = 0
-    fileprivate var scrollViewInsets: UIEdgeInsets = UIEdgeInsets.zero
+    var scrollViewInsets: UIEdgeInsets = UIEdgeInsets.zero
     
     var state: PullToRefreshState = .pulling {
-
         didSet {
             if self.state == oldValue {
                 return
@@ -51,12 +50,11 @@ class WLYTableViewController: WLYViewController, UITableViewDelegate {
         self.view.addSubview(tableView)
     }
     
-
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offsetY = scrollView.contentOffset.y
         
         if offsetY <= -self.tableView.contentInset.top {
-            if offsetY < -self.tableView.contentInset.top - triggerRefreshHeigh {
+            if offsetY < -self.tableView.contentInset.top - self.triggerRefreshHeigh() {
                 if scrollView.isDragging == false && self.state != .refreshing { //release the finger
                     self.state = .refreshing          //startAnimating
                 } else if self.state != .refreshing { //reach the threshold
@@ -73,6 +71,12 @@ class WLYTableViewController: WLYViewController, UITableViewDelegate {
         }
     }
     
+    // MARK - need to override
+    
+    func triggerRefreshHeigh() -> CGFloat {
+        return DefaultTriggerRefreshHeigh
+    }
+    
     func scrollViewDidPull() {
         
     }
@@ -85,7 +89,7 @@ class WLYTableViewController: WLYViewController, UITableViewDelegate {
         scrollViewInsets = self.tableView.contentInset
         
         var insets = self.tableView.contentInset
-        insets.top += triggerRefreshHeigh
+        insets.top += self.triggerRefreshHeigh()
       
 //        self.tableView.bounces = false
     }

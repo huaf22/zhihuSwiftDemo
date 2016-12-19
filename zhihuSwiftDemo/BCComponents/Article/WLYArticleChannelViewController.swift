@@ -40,8 +40,6 @@ class WLYArticleChannelViewController: WLYTableViewController, UITableViewDataSo
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.triggerRefreshHeigh = 50
-        
         self.setupView()
         self.loadData()
     }
@@ -136,7 +134,7 @@ class WLYArticleChannelViewController: WLYTableViewController, UITableViewDataSo
     override func scrollViewDidPull() {
         super.scrollViewDidPull()
         
-        let ratio: CGFloat = (self.tableView.contentOffset.y) / -self.triggerRefreshHeigh
+        let ratio: CGFloat = (self.tableView.contentOffset.y) / -self.triggerRefreshHeigh()
         self.customBar.showPullProgress(ratio)
     }
     

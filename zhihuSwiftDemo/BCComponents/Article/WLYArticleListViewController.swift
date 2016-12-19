@@ -40,8 +40,6 @@ class WLYArticleListViewController: WLYTableViewController, UITableViewDataSourc
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.triggerRefreshHeigh = 50
-        
         self.setupView()
         self.bindAction()
         self.loadData()
@@ -71,10 +69,10 @@ class WLYArticleListViewController: WLYTableViewController, UITableViewDataSourc
     
     func loadData() {
         ArticleService.requestLatestArticles().subscribe(
-            onNext:{ [weak self] in
-                self?.articles = $0.articles
+            onNext: { [weak self](dailtArticle: WLYDailyArticle) in
+                self?.articles = dailtArticle.articles
                 var imageURLs = Array<URL>()
-                for article in ($0.articles)! {
+                for article in (dailtArticle.articles)! {
                     if let imageURL = article.imageURLs?[0] {
                         imageURLs.append(imageURL as URL)
                     }
@@ -82,8 +80,8 @@ class WLYArticleListViewController: WLYTableViewController, UITableViewDataSourc
                 
                 self?.scrollImageView.imageURLs = imageURLs as Array<URL>?
             },
-            onError:{
-                print($0)
+            onError: {(error: Error)  in
+                print(error)
             })
             .addDisposableTo(disposeBag)
     }
@@ -166,7 +164,7 @@ class WLYArticleListViewController: WLYTableViewController, UITableViewDataSourc
     override func scrollViewDidPull() {
         super.scrollViewDidPull()
         
-        let ratio: CGFloat = (self.tableView.contentOffset.y + PosterImageViewHeight) / -self.triggerRefreshHeigh
+        let ratio: CGFloat = (self.tableView.contentOffset.y + PosterImageViewHeight) / -self.triggerRefreshHeigh()
         self.customBar.showPullProgress(ratio)
         print("ratio: \(ratio)")
     }
