@@ -75,6 +75,17 @@
     └── WLYVerticalLayoutButton.swift
 ```
 
+### 如何使用
+* 下载源码
+```
+git clone https://github.com/huaf22/zhihuSwiftDemo.git
+```
+* 使用 pod 安装依赖
+```
+pod install
+```
+* 使用 Xcode 打开 zhihuSwiftDemo.xcworkspace 
+
 ### 知乎日报 API 
 [izzyleung/ZhihuDailyPurify](https://github.com/izzyleung/ZhihuDailyPurify/wiki/%E7%9F%A5%E4%B9%8E%E6%97%A5%E6%8A%A5-API-%E5%88%86%E6%9E%90)
 
