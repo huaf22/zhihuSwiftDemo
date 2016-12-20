@@ -10,16 +10,11 @@ import UIKit
 import SnapKit
 import RxSwift
 
-class WLYArticleChannelViewController: WLYTableViewController, UITableViewDataSource {
+class WLYArticleChannelViewController: WLYViewController, UITableViewDelegate, UITableViewDataSource {
+    private let TableCellHeight: CGFloat = 95
+    private let disposeBag = DisposeBag()
     
-    let BarViewHeight: CGFloat = 58
-    let TableCellHeight: CGFloat = 95
-    let disposeBag = DisposeBag()
-    
-    var customBar: WLYArticleNavigationBar!
-    var posterImageView: UIImageView!
-    
-    var articles: Array<WLYArticle>?
+    private var customView: WLYArticleChannelView!
     
     var theme: WLYArticleTheme? {
         didSet {
@@ -28,6 +23,17 @@ class WLYArticleChannelViewController: WLYTableViewController, UITableViewDataSo
             }
         }
     }
+    
+    private var themeArticles: WLYThemeArticles? {
+        didSet {
+            self.customView.customBar.title = themeArticles?.name
+            self.customView.posterImageView.kf.setImage(with:themeArticles?.ImageURL)
+            
+            self.customView.tableView.reloadData()
+        }
+    }
+    
+    // MARK:- LifeCycle
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -41,6 +47,7 @@ class WLYArticleChannelViewController: WLYTableViewController, UITableViewDataSo
         super.viewDidLoad()
         
         self.setupView()
+        self.bindAction()
         self.loadData()
     }
     
@@ -56,60 +63,63 @@ class WLYArticleChannelViewController: WLYTableViewController, UITableViewDataSo
         self.navigationController?.setNavigationBarHidden(false, animated: false)
     }
     
-    func setupView() {
-        self.posterImageView = UIImageView()
-        self.view.addSubview(self.posterImageView)
-        self.posterImageView.clipsToBounds = true
-        self.posterImageView.contentMode = .scaleAspectFill
-        self.posterImageView.frame = CGRect(x: 0, y: 0, width: self.view.wly_width, height: BarViewHeight);
-        
-        self.customBar = WLYArticleNavigationBar()
-        self.view.addSubview(self.customBar)
-        self.customBar.alpha = 0
-        self.customBar.frame = CGRect(x: 0, y: 0, width: self.view.wly_width, height: BarViewHeight);
-        
-        self.tableView.dataSource = self
-        self.tableView.register(WLYArticleTableViewCell.self , forCellReuseIdentifier: WLYArticleTableViewCell.identifier)
-        self.tableView.frame = CGRect(x: 0, y: BarViewHeight, width: self.view.wly_width, height: self.view.wly_height - BarViewHeight);
+    // MARK:- Private Methods
+    
+    private func setupView() {
+        self.customView = WLYArticleChannelView()
+        self.view.addSubview(self.customView)
+        self.customView.tableView.delegate = self
+        self.customView.tableView.dataSource = self
+        self.customView.snp.makeConstraints { (make) in
+            make.edges.equalTo(self.view)
+        }
     }
     
-    func loadData() {
-        ArticleService.requestThemeArticlesWithID((theme?.id)!).subscribe(
-            onNext:{ [weak self] in
-                if let articles = $0.articles {
-                    self?.articles = articles
-                    self?.customBar.title = $0.name
-                    self?.posterImageView.kf.setImage(with:$0.ImageURL)
-                    self?.tableView.reloadData()
-                }
-            },
-            onError:{ print($0) },
-            onDisposed: { self.scrollViewDidStopRefresh() })
-            .addDisposableTo(disposeBag)
+    private func bindAction() {
+        self.customView.pullToRefreshDidTrigger = { [weak self] in
+            self?.loadData()
+        }
     }
+    
+    private func loadData() {
+        ArticleService.requestThemeArticlesWithID((theme?.id)!).subscribe(
+            onNext:{ [weak self] (themeArticles) in
+                self?.themeArticles = themeArticles
+                
+            }, onError:{ [weak self] (error) in
+                print(error)
+                self?.customView.stopRefreshing()
+                
+            }, onCompleted: { [weak self] in
+                self?.customView.stopRefreshing()
+                
+            }).addDisposableTo(disposeBag)
+    }
+    
+    // MARK:- UITableViewDataSource
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.articles?.count ?? 0
+        return self.themeArticles?.articles?.count ?? 0
     }
     
-    private func tableView(_ tableView: UITableView, heightForRowAtIndexPath indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return TableCellHeight
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: WLYArticleTableViewCell.identifier) as! WLYArticleTableViewCell
         
-        let article = self.articles?[indexPath.row]
+        let article = self.themeArticles?.articles?[indexPath.row]
         cell.titleLabel.text = article?.title
         cell.logoImageView.kf.setImage(with:article?.imageURLs?[0])
         
         return cell
     }
     
-    private func tableView(_ tableView: UITableView, didSelectRowAtIndexPath indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let articleDetailVC = WLYArticleDetailCollectionViewController()
-        let articleIDs: Array<String>? = self.articles?.map { (article: WLYArticle) -> String in
+        let articleIDs: Array<String>? = self.themeArticles?.articles?.map { (article: WLYArticle) -> String in
             return "\(article.id!)"
         }
         
@@ -119,35 +129,5 @@ class WLYArticleChannelViewController: WLYTableViewController, UITableViewDataSo
         
         tableView.deselectRow(at: indexPath, animated: true)
     }
-    
-    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        super.scrollViewDidScroll(scrollView)
-        
-        let y = scrollView.contentOffset.y
-        if y <= 0 && y >= -BarViewHeight {
-            var rect = self.posterImageView.frame
-            rect.size.height = BarViewHeight - y
-            self.posterImageView.frame = rect
-        }
-    }
-    
-    override func scrollViewDidPull() {
-        super.scrollViewDidPull()
-        
-        let ratio: CGFloat = (self.tableView.contentOffset.y) / -self.triggerRefreshHeigh()
-        self.customBar.showPullProgress(ratio)
-    }
-    
-    override func scrollViewDidRefresh() {
-        super.scrollViewDidRefresh()
-        
-        self.customBar.startLoading()
-        self.loadData()
-    }
-    
-    override func scrollViewDidStopRefresh() {
-        super.scrollViewDidStopRefresh()
-        
-        self.customBar.stopLoading()
-    }
+
 }

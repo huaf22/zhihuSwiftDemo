@@ -61,7 +61,7 @@ class WLYArticleListViewController: WLYViewController {
     
     private func bindAction() {
         self.listView.tableViewDidSelect = {[weak self] (index) in
-            let articleDetailVC = WLYArticleDetailCollectionViewController()//WLYArticleDetailViewController()
+            let articleDetailVC = WLYArticleDetailCollectionViewController()
             let articleIDs: Array<String>? = self?.articles?.map({ (article: WLYArticle) -> String in
                 return "\(article.id!)"
             })

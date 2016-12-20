@@ -16,7 +16,8 @@ class WLYArticleListView: UIView, UITableViewDataSource, UITableViewDelegate, WL
     private let BarViewHeight: CGFloat = 58
     private let TableCellHeight: CGFloat = 95
     private let PosterImageViewHeight: CGFloat = 200
-    private let triggerRefreshHeigh: CGFloat = 50.0
+    private let TriggerRefreshHeigh: CGFloat = 50.0
+    
     private let disposeBag = DisposeBag()
     
     private var pullToRefreshPlugin: WLYPullToRefreshPlugin!
@@ -44,7 +45,7 @@ class WLYArticleListView: UIView, UITableViewDataSource, UITableViewDelegate, WL
         }
     }
     
-    // MARK:- LifeCrycle
+    // MARK:- LifeCycle
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -133,7 +134,7 @@ class WLYArticleListView: UIView, UITableViewDataSource, UITableViewDelegate, WL
     // MARK:- WLYPullToRefreshPluginDelegate
     
     func pullToRefreshScrollViewDidPull(scrollView: UIScrollView) {
-        let ratio: CGFloat = (self.tableView.contentOffset.y + PosterImageViewHeight) / -self.triggerRefreshHeigh
+        let ratio: CGFloat = (self.tableView.contentOffset.y + PosterImageViewHeight) / -TriggerRefreshHeigh
         self.customBar.showPullProgress(ratio)
         print("ratio: \(ratio)")
     }
