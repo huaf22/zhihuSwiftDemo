@@ -1,4 +1,17 @@
-# swift版知乎日报
+# 知乎日报(RxSwift 版本)
+
+### 如何使用
+* 下载源码
+
+```
+git clone https://github.com/huaf22/zhihuSwiftDemo.git
+```
+* 使用 pod 安装依赖
+
+```
+pod install
+```
+* 使用 Xcode 打开 zhihuSwiftDemo.xcworkspace 
 
 ### 已实现的功能
 * 首页左滑菜单界面
@@ -10,7 +23,7 @@
 * 文章后台缓存功能
 * 首页海报获取更新
 * 滑动菜单界面的优化
-* 各种bugs
+* 修复 bugs
 * ...
 
 ### 截图:
@@ -75,16 +88,6 @@
     └── WLYVerticalLayoutButton.swift
 ```
 
-### 如何使用
-* 下载源码
-```
-git clone https://github.com/huaf22/zhihuSwiftDemo.git
-```
-* 使用 pod 安装依赖
-```
-pod install
-```
-* 使用 Xcode 打开 zhihuSwiftDemo.xcworkspace 
 
 ### 知乎日报 API 
 [izzyleung/ZhihuDailyPurify](https://github.com/izzyleung/ZhihuDailyPurify/wiki/%E7%9F%A5%E4%B9%8E%E6%97%A5%E6%8A%A5-API-%E5%88%86%E6%9E%90)
@@ -95,6 +98,6 @@ pod install
 * [Alamofire](https://github.com/Alamofire/Alamofire)
 * [AlamofireObjectMapper](https://github.com/tristanhimmelman/AlamofireObjectMapper)
 * [XCGLogger](https://github.com/DaveWoodCom/XCGLogger)
- 
+* [RxSwift](https://github.com/ReactiveX/RxSwift)
  
 Thanks to all of you
