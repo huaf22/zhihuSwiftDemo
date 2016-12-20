@@ -5,11 +5,13 @@ use_frameworks!
 
 target 'zhihuSwiftDemo' do
 
-pod 'SnapKit', '~> 3.0.2'
-pod 'Kingfisher', '>= 3.0'
-pod 'Alamofire', '~> 4.0'
-pod 'AlamofireObjectMapper', '~> 4.0'
-pod 'XCGLogger', '~> 4.0.0'
+    pod 'SnapKit', '~> 3.0.2'
+    pod 'Kingfisher', '>= 3.0'
+    pod 'Alamofire', '~> 4.0'
+    pod 'AlamofireObjectMapper', '~> 4.0'
+    pod 'XCGLogger', '~> 4.0.0'
+    pod 'RxSwift',    '~> 3.0'
+    pod 'RxCocoa',    '~> 3.0'
 
 end
 

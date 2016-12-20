@@ -8,11 +8,13 @@
 
 import Foundation
 import UIKit
+import RxSwift
 
 class WLYHomeMenuViewController: WLYViewController, UITableViewDelegate, UITableViewDataSource {
     
     let HeaderViewHeight: CGFloat = 125
     let FooterViewHeight: CGFloat = 60
+    let disposeBag = DisposeBag()
     
     var headerView: UIView!
     var footerView: UIView!
@@ -67,25 +69,27 @@ class WLYHomeMenuViewController: WLYViewController, UITableViewDelegate, UITable
     }
     
     func loadData() {
-        ArticleService.requestArticleThemes() { (themeResult: WLYArticleThemeResult?, error: Error?) in
-            if error == nil && themeResult != nil {
-                if let array = themeResult?.themes {
-                    self.themeArray = array
-                    self.themeArray?.insert(self.homePageTheme(), at: 0)
-                    
-                    self.tableView.reloadData()
+        ArticleService.requestArticleThemes() .subscribe(
+            onNext: { [weak self] in
+                if let array = $0.themes {
+                    self?.themeArray = array
+                    self?.themeArray?.insert((self?.homePageTheme())!, at: 0)
+
+                    self?.tableView.reloadData()
                 }
-            } else {
+            },
+            onError:{
                 //error handler
-            }
-        }
+                print($0)
+            })
+            .addDisposableTo(disposeBag)
     }
     
     func homePageTheme() -> WLYArticleTheme {
         let theme = WLYArticleTheme()
         theme.name = "首页"
         
-        return theme
+        return  theme
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

@@ -31,7 +31,7 @@ open class WLYPullToRefreshView: UIView {
     
     fileprivate var pull: Bool = true
     
-    fileprivate var positionY:CGFloat = 0 {
+    fileprivate var positionY: CGFloat = 0 {
         didSet {
             if self.positionY == oldValue {
                 return
@@ -199,18 +199,8 @@ open class WLYPullToRefreshView: UIView {
         scrollView.bounces = false
         
         scrollView.contentInset = self.scrollViewInsets
+        
         self.refreshCompletion?()
-//        UIView.animateWithDuration(0.5,
-//                                   delay: 0,
-//                                   options:[],
-//                                   animations: { scrollView.contentInset = self.scrollViewInsets },
-//                                   completion: { _ in
-//                                    let time = dispatch_time(DISPATCH_TIME_NOW, Int64(self.refreshAutoStopTime * Double(NSEC_PER_SEC)))
-//                                    dispatch_after(time, dispatch_get_main_queue()) {
-//                                        self.state = .Stop
-//                                    }
-//                                    self.refreshCompletion?()
-//        })
     }
     
     /**
@@ -220,13 +210,5 @@ open class WLYPullToRefreshView: UIView {
         scrollView.bounces = self.scrollViewBounces
         scrollView.contentInset = self.scrollViewInsets
         self.state = .pulling
-        
-//        UIView.animateWithDuration(self.refreshStopTime,
-//                                   animations: {
-//                                    scrollView.contentInset = self.scrollViewInsets
-//            }
-//        ) { _ in
-//            self.state = .Pulling
-//        }
     }
 }

@@ -8,12 +8,14 @@
 
 import Foundation
 import UIKit
+import RxSwift
 
 class WLYArticleDetailCell: WLYCollectionViewCell, UIScrollViewDelegate {
     
     let ToolViewHeight: CGFloat = 43
     let ImageViewHeight: CGFloat = 220
     let RefreshHeight: CGFloat = 50
+    let disposeBag = DisposeBag()
     
     var webView: UIWebView!
     var imageView: UIImageView!
@@ -76,17 +78,16 @@ class WLYArticleDetailCell: WLYCollectionViewCell, UIScrollViewDelegate {
     
     func loadData() {
         if self.articleID != nil && !articleID.isEmpty {
-            ArticleService.requestArticleDetail(self.articleID) { (articleDetail, error) in
-                if error == nil {
-                    if let htmlString = ArticleHTMLParser.parseHTML(articleDetail!) {
-                        self.webView.loadHTMLString(htmlString, baseURL: nil)
-                        self.imageView.kf.setImage(with: articleDetail?.posterURL)
-                        return
+            ArticleService.requestArticleDetail(self.articleID).subscribe(
+                onNext: { [weak self] (articleDetail: WLYArticleDetail) in
+                    if let htmlString = ArticleHTMLParser.parseHTML(articleDetail) {
+                        self?.webView.loadHTMLString(htmlString, baseURL: nil)
+                        self?.imageView.kf.setImage(with: articleDetail.posterURL)
                     }
-                } else {
-                     // handle error
-                }
-            }
+                },
+                onError: { (error: Error) in
+                    print(error)
+            }).addDisposableTo(disposeBag)
         }
     }
     

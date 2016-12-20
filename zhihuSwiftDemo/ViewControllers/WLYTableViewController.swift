@@ -9,7 +9,9 @@
 import Foundation
 import UIKit
 
-class WLYTableViewController: WLYViewController, UITableViewDelegate, UITableViewDataSource {
+class WLYTableViewController: WLYViewController, UITableViewDelegate {
+    let DefaultTriggerRefreshHeigh: CGFloat = 50.0;
+    
     enum PullToRefreshState {
         case pulling
         case triggered
@@ -18,9 +20,7 @@ class WLYTableViewController: WLYViewController, UITableViewDelegate, UITableVie
     }
     
     var tableView: UITableView!
-    
-    var triggerRefreshHeigh: CGFloat = 0
-    fileprivate var scrollViewInsets: UIEdgeInsets = UIEdgeInsets.zero
+    var scrollViewInsets: UIEdgeInsets = UIEdgeInsets.zero
     
     var state: PullToRefreshState = .pulling {
         didSet {
@@ -45,19 +45,16 @@ class WLYTableViewController: WLYViewController, UITableViewDelegate, UITableVie
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.tableView = UITableView(frame: .zero, style: .plain)
+        self.tableView = UITableView(frame: CGRect.zero, style: UITableViewStyle.plain)
         self.tableView.delegate = self
-        self.tableView.dataSource = self
-        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: String(describing: UITableViewCell.self))
         self.view.addSubview(tableView)
     }
     
-
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offsetY = scrollView.contentOffset.y
         
         if offsetY <= -self.tableView.contentInset.top {
-            if offsetY < -self.tableView.contentInset.top - triggerRefreshHeigh {
+            if offsetY < -self.tableView.contentInset.top - self.triggerRefreshHeigh() {
                 if scrollView.isDragging == false && self.state != .refreshing { //release the finger
                     self.state = .refreshing          //startAnimating
                 } else if self.state != .refreshing { //reach the threshold
@@ -74,6 +71,12 @@ class WLYTableViewController: WLYViewController, UITableViewDelegate, UITableVie
         }
     }
     
+    // MARK - need to override
+    
+    func triggerRefreshHeigh() -> CGFloat {
+        return DefaultTriggerRefreshHeigh
+    }
+    
     func scrollViewDidPull() {
         
     }
@@ -86,7 +89,7 @@ class WLYTableViewController: WLYViewController, UITableViewDelegate, UITableVie
         scrollViewInsets = self.tableView.contentInset
         
         var insets = self.tableView.contentInset
-        insets.top += triggerRefreshHeigh
+        insets.top += self.triggerRefreshHeigh()
       
 //        self.tableView.bounces = false
     }
@@ -94,14 +97,5 @@ class WLYTableViewController: WLYViewController, UITableViewDelegate, UITableVie
     func scrollViewDidStopRefresh() {
         self.state = .pulling
 //        self.tableView.bounces = true
-    }
-    
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
-    }
-    
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell: UITableViewCell = tableView.dequeueReusableCell(withIdentifier: String(describing: UITableViewCell.self), for: indexPath)
-        return cell
     }
 }

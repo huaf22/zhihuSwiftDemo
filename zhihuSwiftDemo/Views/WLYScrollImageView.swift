@@ -159,7 +159,7 @@ class WLYScrollImageView: UIView, UIScrollViewDelegate {
             index = 0
         }
         
-        print("calcuateCurrentIndex: \(index)")
+//        print("calcuateCurrentIndex: \(index)")
         return index
     }
     
